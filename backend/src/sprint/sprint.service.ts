@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MetricsService } from '../metrics/metrics.service';
 import { evaluateSprintRisk } from '../risk/risk.engine';
 import axios from 'axios';
@@ -9,6 +9,9 @@ import { SprintSnapshot } from './sprint.entity';
 
 @Injectable()
 export class SprintService {
+  private readonly logger = new Logger(SprintService.name);
+  private readonly ML_API_URL = process.env.ML_API_URL;
+
   constructor(
     private readonly metricsService: MetricsService,
 
@@ -23,16 +26,21 @@ export class SprintService {
     let mlPrediction = 'ML prediction unavailable';
     let mlExplanation: any[] = [];
 
-    try {
-      const mlRes = await axios.post(
-        'http://localhost:8000/predict',
-        metrics,
-      );
+    if (!this.ML_API_URL) {
+      this.logger.warn('ML_API_URL not set');
+    } else {
+      try {
+        const mlRes = await axios.post(
+          `${this.ML_API_URL}/predict`,
+          metrics,
+          { timeout: 5000 },
+        );
 
-      mlPrediction = `${mlRes.data.failure_probability}% chance of sprint failure`;
-      mlExplanation = mlRes.data.explanation || [];
-    } catch (err) {
-      console.error('ML service unavailable');
+        mlPrediction = `${mlRes.data.failure_probability}% chance of sprint failure`;
+        mlExplanation = mlRes.data.explanation || [];
+      } catch (err) {
+        this.logger.error('ML service unavailable', err?.message);
+      }
     }
 
     // ✅ Persist snapshot to DB
@@ -55,7 +63,7 @@ export class SprintService {
     };
   }
 
-  // ✅ ONLY DB DATA (NO MOCKS)
+  // ✅ History purely from DB
   async getHistory() {
     return this.sprintRepo.find({
       order: { createdAt: 'ASC' },

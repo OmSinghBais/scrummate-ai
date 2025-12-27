@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SprintModule } from './sprint/sprint.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         rejectUnauthorized: false,
       },
     }),
+    MetricsModule,
+    SprintModule,
   ],
 })
 export class AppModule {}

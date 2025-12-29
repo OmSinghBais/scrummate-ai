@@ -81,7 +81,7 @@ export default function RiskTrendChart({ data }: { data: any[] }) {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               padding: '12px',
             }}
-            formatter={(value: number) => [`${value}`, 'Health Score']}
+            formatter={(value: number | undefined) => [`${value ?? 0}`, 'Health Score']}
             labelStyle={{ fontWeight: 'bold', color: '#374151' }}
           />
           <Line

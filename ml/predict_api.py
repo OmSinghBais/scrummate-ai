@@ -27,20 +27,29 @@ def predict_risk(data: dict):
     probability = model.predict_proba(features)[0][1]
 
     # ✅ Correct feature importance (GAIN-based)
+    # XGBoost uses internal feature names (f0, f1, f2, f3) instead of actual names
     booster = model.get_booster()
     score = booster.get_score(importance_type="gain")
 
     explanation = []
-    for feature in FEATURE_NAMES:
+    for i, feature_name in enumerate(FEATURE_NAMES):
+        # Try both XGBoost internal name (f0, f1, etc.) and actual feature name
+        xgb_name = f"f{i}"
+        importance = float(score.get(xgb_name, score.get(feature_name, 0)))
         explanation.append({
-            "feature": feature,
-            "importance": float(score.get(feature, 0))
+            "feature": feature_name,
+            "importance": importance
         })
 
     # Normalize to percentage
     total = sum(x["importance"] for x in explanation) or 1
-    for x in explanation:
-        x["importance"] = round((x["importance"] / total) * 100, 2)
+    if total > 0:
+        for x in explanation:
+            x["importance"] = round((x["importance"] / total) * 100, 2)
+    else:
+        # If no importance data, distribute equally (fallback)
+        for x in explanation:
+            x["importance"] = round(100.0 / len(explanation), 2)
 
     return {
         "failure_probability": round(float(probability) * 100, 2),

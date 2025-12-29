@@ -14,9 +14,11 @@ interface PullRequest {
 @Injectable()
 export class GitHubService {
   private readonly logger = new Logger(GitHubService.name);
+
   private readonly token: string;
   private readonly owner: string;
   private readonly repo: string;
+
   private readonly client: AxiosInstance | null;
 
   constructor() {
@@ -33,20 +35,26 @@ export class GitHubService {
         },
       });
     } else {
-      this.logger.warn('GitHub credentials not configured. Using mock data.');
+      this.logger.warn(
+        'GitHub credentials not configured. GitHub metrics will be skipped.',
+      );
       this.client = null;
     }
   }
 
+  /**
+   * Fetch recent pull requests with reviews & commits
+   */
   async getRecentPullRequests(days: number = 14): Promise<PullRequest[]> {
     if (!this.client) return [];
+
+    const client = this.client; // ✅ TS-safe non-null reference
 
     try {
       const since = new Date();
       since.setDate(since.getDate() - days);
-      const sinceISO = since.toISOString();
 
-      const response = await this.client.get(
+      const response = await client.get(
         `/repos/${this.owner}/${this.repo}/pulls`,
         {
           params: {
@@ -62,20 +70,23 @@ export class GitHubService {
         (pr: any) => new Date(pr.created_at) >= since,
       );
 
-      // Fetch additional details for each PR
       const prsWithDetails = await Promise.all(
         prs.map(async (pr: any) => {
           const [reviewsRes, commitsRes] = await Promise.all([
-            this.client.get(`/repos/${this.owner}/${this.repo}/pulls/${pr.number}/reviews`),
-            this.client.get(`/repos/${this.owner}/${this.repo}/pulls/${pr.number}/commits`),
+            client.get(
+              `/repos/${this.owner}/${this.repo}/pulls/${pr.number}/reviews`,
+            ),
+            client.get(
+              `/repos/${this.owner}/${this.repo}/pulls/${pr.number}/commits`,
+            ),
           ]);
 
           return {
             number: pr.number,
             created_at: pr.created_at,
             merged_at: pr.merged_at,
-            reviews: reviewsRes.data,
-            commits: commitsRes.data.length,
+            reviews: reviewsRes.data || [],
+            commits: commitsRes.data?.length || 0,
             additions: pr.additions || 0,
             deletions: pr.deletions || 0,
           };
@@ -83,12 +94,18 @@ export class GitHubService {
       );
 
       return prsWithDetails;
-    } catch (error) {
-      this.logger.error('Failed to fetch pull requests from GitHub', error?.message);
+    } catch (error: any) {
+      this.logger.error(
+        'Failed to fetch pull requests from GitHub',
+        error?.message,
+      );
       return [];
     }
   }
 
+  /**
+   * Average PR review delay (hours)
+   */
   async calculatePRReviewDelay(): Promise<number> {
     if (!this.client) return 0;
 
@@ -101,23 +118,37 @@ export class GitHubService {
       for (const pr of prs) {
         if (pr.reviews.length > 0) {
           const firstReview = pr.reviews[0];
+          if (!firstReview?.submitted_at) continue;
+
           const prCreated = new Date(pr.created_at);
-          const firstReviewDate = new Date(firstReview.submitted_at);
-          const delayHours = (firstReviewDate.getTime() - prCreated.getTime()) / (1000 * 60 * 60);
-          delays.push(delayHours);
+          const reviewDate = new Date(firstReview.submitted_at);
+
+          const delayHours =
+            (reviewDate.getTime() - prCreated.getTime()) /
+            (1000 * 60 * 60);
+
+          if (delayHours >= 0) delays.push(delayHours);
         }
       }
 
       if (delays.length === 0) return 0;
 
-      const avgDelay = delays.reduce((a, b) => a + b, 0) / delays.length;
+      const avgDelay =
+        delays.reduce((sum, val) => sum + val, 0) / delays.length;
+
       return Math.round(avgDelay);
-    } catch (error) {
-      this.logger.error('Failed to calculate PR review delay', error?.message);
+    } catch (error: any) {
+      this.logger.error(
+        'Failed to calculate PR review delay',
+        error?.message,
+      );
       return 0;
     }
   }
 
+  /**
+   * Code churn percentage (deletions vs total changes)
+   */
   async calculateCodeChurn(): Promise<number> {
     if (!this.client) return 0;
 
@@ -125,29 +156,32 @@ export class GitHubService {
       const prs = await this.getRecentPullRequests(14);
       if (prs.length === 0) return 0;
 
-      let totalAdditions = 0;
-      let totalDeletions = 0;
+      let additions = 0;
+      let deletions = 0;
 
       for (const pr of prs) {
-        totalAdditions += pr.additions;
-        totalDeletions += pr.deletions;
+        additions += pr.additions;
+        deletions += pr.deletions;
       }
 
-      const totalChanged = totalAdditions + totalDeletions;
-      if (totalChanged === 0) return 0;
+      const totalChanges = additions + deletions;
+      if (totalChanges === 0) return 0;
 
-      // Code churn = (deletions / total changed) * 100
-      // High churn means lots of code being rewritten/deleted
-      const churnRate = (totalDeletions / totalChanged) * 100;
+      const churnRate = (deletions / totalChanges) * 100;
       return Math.round(churnRate);
-    } catch (error) {
-      this.logger.error('Failed to calculate code churn', error?.message);
+    } catch (error: any) {
+      this.logger.error(
+        'Failed to calculate code churn',
+        error?.message,
+      );
       return 0;
     }
   }
 
+  /**
+   * Whether GitHub integration is enabled
+   */
   isConfigured(): boolean {
-    return !!(this.token && this.owner && this.repo);
+    return Boolean(this.token && this.owner && this.repo);
   }
 }
-

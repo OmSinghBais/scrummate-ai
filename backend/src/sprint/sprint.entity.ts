@@ -4,22 +4,25 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 export class SprintSnapshot {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  healthScore: number;
-
-  @Column()
-  riskZone: string;
-
-  @Column('json')
-  metrics: any;
-
-  @Column()
-  mlPrediction: string;
-
-  @Column('json', { nullable: true })
-  mlExplanation: any;
-
-  @CreateDateColumn()
-  createdAt: Date;
-}
+ 
+    @Column()
+    sprintName: string; // ✅ ADD THIS
+  
+    @Column()
+    healthScore: number;
+  
+    @Column()
+    riskZone: string;
+  
+    @Column('json')
+    metrics: any;
+  
+    @Column()
+    mlPrediction: string;
+  
+    @Column('json', { nullable: true })
+    mlExplanation: any;
+  
+    @CreateDateColumn()
+    createdAt: Date;
+  }

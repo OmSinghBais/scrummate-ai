@@ -44,13 +44,17 @@ export class SprintService {
     }
 
     // ✅ Persist snapshot to DB
-    await this.sprintRepo.save({
-      healthScore: risk.score,
-      riskZone: risk.zone,
-      metrics,
-      mlPrediction,
-      mlExplanation,
-    });
+    const sprintCount = await this.sprintRepo.count();
+
+await this.sprintRepo.save({
+  sprintName: `Sprint ${sprintCount + 1}`,
+  healthScore: risk.score,
+  riskZone: risk.zone,
+  metrics,
+  mlPrediction,
+  mlExplanation,
+});
+
 
     return {
       sprint: 'Current Sprint',
@@ -68,5 +72,6 @@ export class SprintService {
     return this.sprintRepo.find({
       order: { createdAt: 'ASC' },
     });
+    
   }
 }

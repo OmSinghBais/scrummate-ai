@@ -14,7 +14,6 @@ export class SprintService {
 
   constructor(
     private readonly metricsService: MetricsService,
-
     @InjectRepository(SprintSnapshot)
     private readonly sprintRepo: Repository<SprintSnapshot>,
   ) {}
@@ -43,21 +42,22 @@ export class SprintService {
       }
     }
 
-    // ✅ Persist snapshot to DB
+    // ✅ Determine sprint number safely
     const sprintCount = await this.sprintRepo.count();
+    const sprintName = `Sprint ${sprintCount + 1}`;
 
-await this.sprintRepo.save({
-  sprintName: `Sprint ${sprintCount + 1}`,
-  healthScore: risk.score,
-  riskZone: risk.zone,
-  metrics,
-  mlPrediction,
-  mlExplanation,
-});
-
+    // ✅ Persist snapshot
+    await this.sprintRepo.save({
+      sprintName,
+      healthScore: risk.score,
+      riskZone: risk.zone,
+      metrics,
+      mlPrediction,
+      mlExplanation,
+    });
 
     return {
-      sprint: 'Current Sprint',
+      sprintName,
       healthScore: risk.score,
       riskZone: risk.zone,
       metrics,
@@ -67,11 +67,10 @@ await this.sprintRepo.save({
     };
   }
 
-  // ✅ History purely from DB
+  // ✅ Sorted history (oldest → newest)
   async getHistory() {
     return this.sprintRepo.find({
       order: { createdAt: 'ASC' },
     });
-    
   }
 }

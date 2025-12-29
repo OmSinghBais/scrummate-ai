@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 import MetricCard from '@/components/MetricCard';
 import RiskBadge from '@/components/RiskBadge';
 import Insights from '@/components/Insights';
 import RiskTrendChart from '@/components/RiskTrendChart';
+import Footer from '@/components/Footer';
 
 // Use production backend URL if NEXT_PUBLIC_API_URL is not set
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 
@@ -18,32 +20,38 @@ export default function Dashboard() {
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = async (showRefreshing = false) => {
+    try {
+      if (showRefreshing) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+      setError(null);
+      
+      const [healthRes, historyRes] = await Promise.all([
+        axios.get(`${API_URL}/sprint/health`),
+        axios.get(`${API_URL}/sprint/history`).catch(() => ({ data: [] })),
+      ]);
+      
+      setData(healthRes.data);
+      setHistory(historyRes.data || []);
+      setLastUpdated(new Date());
+    } catch (err: any) {
+      console.error('Failed to fetch data:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        console.log('Fetching from API:', API_URL);
-        const [healthRes, historyRes] = await Promise.all([
-          axios.get(`${API_URL}/sprint/health`),
-          axios.get(`${API_URL}/sprint/history`).catch(() => ({ data: [] })),
-        ]);
-        setData(healthRes.data);
-        setHistory(historyRes.data || []);
-        setError(null);
-        console.log('Data loaded successfully:', healthRes.data);
-      } catch (err: any) {
-        console.error('Failed to fetch data:', err);
-        console.error('API URL was:', API_URL);
-        console.error('Error details:', err.response?.data || err.message);
-        setError(err.response?.data?.message || err.message || 'Failed to load dashboard data. Check console for details.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh every 30 seconds
+    const interval = setInterval(() => fetchData(), 30000); // Auto-refresh every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -72,13 +80,24 @@ export default function Dashboard() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
             Error Loading Dashboard
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg hover:shadow-xl font-semibold"
-          >
-            Retry
-          </button>
+          <p className="text-gray-600 dark:text-gray-400 mb-2">{error}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
+            Make sure the backend is running and accessible
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => fetchData()}
+              className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg hover:shadow-xl font-semibold"
+            >
+              Retry
+            </button>
+            <Link
+              href="/"
+              className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all font-semibold"
+            >
+              Go Home
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -97,19 +116,50 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 animate-fade-in">
+      {refreshing && (
+        <div className="fixed top-4 right-4 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg px-4 py-2 flex items-center gap-2 animate-fade-in">
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Refreshing...</span>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-3 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl shadow-lg">
-              <span className="text-3xl">🚀</span>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl shadow-lg">
+                <span className="text-3xl">🚀</span>
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                  ScrumMate AI
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Dashboard</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                ScrumMate AI
-              </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Dashboard</p>
+            <div className="flex items-center gap-3">
+              {lastUpdated && (
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Updated: {lastUpdated.toLocaleTimeString()}
+                </div>
+              )}
+              <button
+                onClick={() => fetchData(true)}
+                disabled={refreshing}
+                className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
+              >
+                <span className={`text-lg ${refreshing ? 'animate-spin' : ''}`}>
+                  {refreshing ? '⏳' : '🔄'}
+                </span>
+                <span className="font-medium text-sm">Refresh</span>
+              </button>
+              <Link
+                href="/"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-all text-sm font-medium"
+              >
+                Home
+              </Link>
             </div>
           </div>
           <p className="text-gray-600 dark:text-gray-400 ml-16">
@@ -143,8 +193,8 @@ export default function Dashboard() {
                 />
               </div>
             </div>
-            <RiskBadge zone={data.riskZone} />
-          </div>
+        <RiskBadge zone={data.riskZone} />
+      </div>
 
           {/* ML Prediction */}
           <div className="mt-8 p-5 bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 dark:from-orange-900/30 dark:via-amber-900/20 dark:to-orange-900/30 rounded-xl border-2 border-orange-200 dark:border-orange-800/50 shadow-inner">
@@ -172,7 +222,7 @@ export default function Dashboard() {
           />
           <MetricCard
             title="PR Review Delay"
-            value={`${data.metrics.prReviewDelay}h`}
+            value={`${Math.round(data.metrics.prReviewDelay || 0)}h`}
           />
           <MetricCard
             title="Code Churn"
@@ -190,6 +240,7 @@ export default function Dashboard() {
           <Insights items={data.insights} />
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

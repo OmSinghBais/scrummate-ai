@@ -7,25 +7,31 @@ import RiskBadge from '@/components/RiskBadge';
 import Insights from '@/components/Insights';
 import RiskTrendChart from '@/components/RiskTrendChart';
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Dashboard() {
   const [data, setData] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
 
   useEffect(() => {
-    axios.get(`${API}/sprint/history`)
+    if (!API_URL) return;
+
+    axios
+      .get(`${API_URL}/sprint/history`)
       .then(res => setHistory(res.data))
-      .catch(console.error);
+      .catch(err => console.error('History error:', err));
   }, []);
 
   useEffect(() => {
-    axios.get(`${API}/sprint/health`)
+    if (!API_URL) return;
+
+    axios
+      .get(`${API_URL}/sprint/health`)
       .then(res => setData(res.data))
-      .catch(console.error);
+      .catch(err => console.error('Health error:', err));
   }, []);
 
-  if (!data) return <p className="p-10">Loading dashboard...</p>;
+  if (!data) return <p className="p-10">Loading...</p>;
 
   return (
     <div className="p-10 space-y-6">
@@ -36,7 +42,7 @@ export default function Dashboard() {
         <RiskBadge zone={data.riskZone} />
       </div>
 
-      <div className="text-sm text-orange-400">
+      <div className="mt-2 text-sm text-orange-400">
         ML Prediction: {data.mlPrediction}
       </div>
 

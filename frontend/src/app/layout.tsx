@@ -15,9 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="flex min-h-screen min-w-[340px] flex-col bg-neutral-950 font-sans text-white antialiased overflow-x-hidden">
+      <body className="flex min-h-screen min-w-[340px] flex-col bg-black font-sans text-white antialiased overflow-x-hidden">
         <PremiumNavbar />
-        <main className="grow">{children}</main>
+        {children}
         <Analytics />
       </body>
     </html>

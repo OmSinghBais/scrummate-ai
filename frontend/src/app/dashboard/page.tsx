@@ -63,7 +63,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0B0C0E]">
+      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a]">
         <div className="text-center">
           <motion.div
             className="relative mx-auto mb-6 h-16 w-16"
@@ -82,7 +82,7 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0B0C0E] p-10">
+      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] p-10">
         <GlassCard className="max-w-md p-8 text-center">
           <div className="mb-4 text-6xl">⚠️</div>
           <h2 className="mb-3 text-2xl font-bold text-white">Error Loading Dashboard</h2>
@@ -122,7 +122,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0C0E] flex">
+    <div className="min-h-screen bg-[#0a0a0a] flex">
       <Sidebar />
       
       <div className="flex-1 lg:ml-64">

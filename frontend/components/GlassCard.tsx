@@ -18,12 +18,12 @@ export default function GlassCard({
 }: GlassCardProps) {
   return (
     <motion.div
-      className={`glass-card rounded-2xl p-6 ${className}`}
-      whileHover={hover ? { y: -8, scale: 1.02 } : {}}
+      className={`glass rounded-2xl p-6 ${className}`}
+      whileHover={hover ? { y: -4, scale: 1.01 } : {}}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
       style={{
         transformStyle: tilt ? 'preserve-3d' : 'flat',
       }}

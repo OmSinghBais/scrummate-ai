@@ -1,8 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
-import Navbar from '@/components/Navbar';
-import AnnouncementBar from '@/components/AnnouncementBar';
+import PremiumNavbar from '@/components/PremiumNavbar';
 
 export const metadata: Metadata = {
   title: 'ScrumMate AI - Sprint Risk Analysis',
@@ -16,9 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="flex min-h-screen min-w-[340px] flex-col bg-[#0B0C0E] font-sans text-white antialiased overflow-x-hidden">
-        <AnnouncementBar />
-        <Navbar />
+      <body className="flex min-h-screen min-w-[340px] flex-col bg-[#0a0a0a] font-sans text-white antialiased overflow-x-hidden">
+        <PremiumNavbar />
         <main className="grow">{children}</main>
         <Analytics />
       </body>

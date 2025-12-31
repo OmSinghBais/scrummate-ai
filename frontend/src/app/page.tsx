@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 // Navbar Component
 function Navbar() {
   const { data: session } = useSession();
-  const [scrolled, setScrolled] = React.useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {

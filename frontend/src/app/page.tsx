@@ -220,7 +220,7 @@ function Features() {
                   >
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="text-lg text-white font-medium">{f.title}</h3>
-                      {f.confidence && (
+                      {'confidence' in f && f.confidence && (
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                             <div 

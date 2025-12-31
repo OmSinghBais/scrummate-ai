@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Team } from '../team/team.entity';
 
 @Entity()
 export class SprintSnapshot {
@@ -23,6 +24,13 @@ export class SprintSnapshot {
 
   @Column('json', { nullable: true })
   mlExplanation: any;
+
+  @ManyToOne(() => Team, { nullable: true })
+  @JoinColumn()
+  team: Team;
+
+  @Column({ nullable: true })
+  teamId: number;
 
   @CreateDateColumn()
   createdAt: Date;

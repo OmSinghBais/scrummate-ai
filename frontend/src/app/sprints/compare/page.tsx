@@ -6,7 +6,6 @@ import axios from 'axios';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import TeamSwitcher from '@/components/TeamSwitcher';
-import Providers from '@/components/Providers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -89,8 +88,7 @@ export default function SprintComparePage() {
   };
 
   return (
-    <Providers>
-      <div className="min-h-screen bg-[#0a0a0a] p-8">
+    <div className="min-h-screen bg-[#0a0a0a] p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -227,7 +225,7 @@ export default function SprintComparePage() {
           </>
         )}
       </div>
-    </Providers>
+    </div>
   );
 }
 

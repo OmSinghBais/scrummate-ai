@@ -39,11 +39,9 @@ export default function ScrollReveal({
   return (
     <div
       ref={ref}
-      className={className}
+      className={`section ${className} ${inView ? 'visible' : ''}`}
       style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0) translateX(0) scale(1)' : `${getTransform()} scale(0.95)`,
-        transition: `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${delay}ms`,
+        transitionDelay: `${delay}ms`,
       }}
     >
       {children}

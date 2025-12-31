@@ -1,5 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import Header from '@/components/Header';
+import AnnouncementBar from '@/components/AnnouncementBar';
 
 export const metadata: Metadata = {
   title: 'ScrumMate AI - Sprint Risk Analysis',
@@ -13,7 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="antialiased">{children}</body>
+      <body className="flex min-h-screen min-w-[340px] flex-col bg-[#0B0C0E] font-sans text-white antialiased">
+        <AnnouncementBar />
+        <Header />
+        <main className="grow pt-[100px]">{children}</main>
+      </body>
     </html>
   );
 }

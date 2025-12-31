@@ -2,27 +2,118 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-center md:text-left">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              © 2024 ScrumMate AI. Built with ❤️ for agile teams.
+    <footer className="relative border-t border-gray-800 bg-[#0B0C0E]/50 pt-8 pb-safe-or-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 pb-8 md:grid-cols-4">
+          {/* Brand */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-amber-500">
+                <span className="text-sm">🚀</span>
+              </div>
+              <span className="text-lg font-bold text-white">ScrumMate AI</span>
+            </div>
+            <p className="text-sm text-gray-400">
+              AI-powered sprint health monitoring and risk prediction platform
             </p>
           </div>
-          <div className="flex gap-6">
-            <Link
-              href="/"
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
-            >
-              Dashboard
-            </Link>
+
+          {/* Product */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-300">
+              Product
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  Features
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-300">
+              Company
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="#"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  About
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  Blog
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-300">
+              Support
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="#"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  Help Center
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 pt-8">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-sm text-gray-400">
+              © {new Date().getFullYear()} ScrumMate AI. All rights reserved.
+            </p>
+            <div className="flex gap-6">
+              <Link
+                href="/"
+                className="text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                Home
+              </Link>
+              <Link
+                href="/dashboard"
+                className="text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                Dashboard
+              </Link>
+            </div>
           </div>
         </div>
       </div>

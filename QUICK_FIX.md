@@ -25,8 +25,8 @@ The dashboard is trying to connect to `http://localhost:3001` instead of your pr
    - Wait for deployment to complete
 
 ### Step 2: Test
-
-1. Open: https://scrummate-ai-2t6u.vercel.app/dashboard
+https://scrummate-ai-2t6u.vercel.app/dashboard
+1. Open: 
 2. Refresh the page
 3. Dashboard should now load!
 

@@ -14,19 +14,17 @@ import {
 export default function RiskTrendChart({ data }: { data: any[] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800 shadow-xl">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+      <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-6 shadow-xl backdrop-blur-sm">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-lg bg-blue-900/30 p-2">
             <span className="text-xl">📈</span>
           </div>
-          <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200">
-            Sprint Risk Trend
-          </h3>
+          <h3 className="text-lg font-bold text-white">Sprint Risk Trend</h3>
         </div>
-        <div className="flex flex-col items-center justify-center h-64 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
-          <div className="text-4xl mb-2">📊</div>
-          <p className="text-gray-500 dark:text-gray-400 font-medium">No historical data available yet</p>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Data will appear as sprints are tracked</p>
+        <div className="flex h-64 flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-700 bg-gradient-to-br from-gray-800 to-gray-900">
+          <div className="mb-2 text-4xl">📊</div>
+          <p className="font-medium text-gray-400">No historical data available yet</p>
+          <p className="mt-1 text-sm text-gray-500">Data will appear as sprints are tracked</p>
         </div>
       </div>
     );
@@ -38,15 +36,13 @@ export default function RiskTrendChart({ data }: { data: any[] }) {
   }));
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800 shadow-xl">
-      <div className="flex items-center gap-3 mb-5">
-        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+    <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-6 shadow-xl backdrop-blur-sm">
+      <div className="mb-5 flex items-center gap-3">
+        <div className="rounded-lg bg-blue-900/30 p-2">
           <span className="text-xl">📈</span>
         </div>
-        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200">
-          Sprint Risk Trend
-        </h3>
-        <span className="ml-auto px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-bold">
+        <h3 className="text-lg font-bold text-white">Sprint Risk Trend</h3>
+        <span className="ml-auto rounded-full bg-blue-900/30 px-3 py-1 text-xs font-bold text-blue-300">
           {data.length} sprints
         </span>
       </div>
@@ -55,34 +51,40 @@ export default function RiskTrendChart({ data }: { data: any[] }) {
         <LineChart data={chartData} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
           <defs>
             <linearGradient id="colorHealth" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+              <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
-          <XAxis 
-            dataKey="sprint" 
-            stroke="#6b7280"
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+          <XAxis
+            dataKey="sprint"
+            stroke="#9ca3af"
             style={{ fontSize: '12px', fontWeight: '500' }}
-            tick={{ fill: '#6b7280' }}
+            tick={{ fill: '#9ca3af' }}
           />
-          <YAxis 
-            stroke="#6b7280"
+          <YAxis
+            stroke="#9ca3af"
             style={{ fontSize: '12px', fontWeight: '500' }}
-            tick={{ fill: '#6b7280' }}
+            tick={{ fill: '#9ca3af' }}
             domain={[0, 100]}
-            label={{ value: 'Health Score', angle: -90, position: 'insideLeft', style: { fill: '#6b7280' } }}
+            label={{
+              value: 'Health Score',
+              angle: -90,
+              position: 'insideLeft',
+              style: { fill: '#9ca3af' },
+            }}
           />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: 'rgba(255, 255, 255, 0.98)',
-              border: '2px solid #e5e7eb',
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'rgba(17, 24, 39, 0.98)',
+              border: '2px solid #374151',
               borderRadius: '12px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
               padding: '12px',
+              color: '#ffffff',
             }}
             formatter={(value: number | undefined) => [`${value ?? 0}`, 'Health Score']}
-            labelStyle={{ fontWeight: 'bold', color: '#374151' }}
+            labelStyle={{ fontWeight: 'bold', color: '#ffffff' }}
           />
           <Line
             type="monotone"

@@ -3,81 +3,204 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <div className="inline-block p-4 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl shadow-2xl mb-6 transform hover:scale-105 transition-transform">
-            <span className="text-6xl">🚀</span>
+    <div className="flex min-h-screen flex-col">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden pt-12 pb-16 lg:pt-20 lg:pb-24">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl text-center animate-fade-in">
+            <div className="mb-8 inline-flex items-center justify-center">
+              <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 p-4 shadow-2xl transition-transform hover:scale-105">
+                <span className="text-6xl">🚀</span>
+              </div>
+            </div>
+            <h1 className="mb-6 text-5xl font-extrabold leading-tight text-white sm:text-6xl lg:text-7xl">
+              A higher standard in{' '}
+              <span className="gradient-text">sprint management</span>
+            </h1>
+            <p className="mb-4 text-xl text-gray-300 sm:text-2xl">
+              AI-Powered Sprint Risk Analysis
+            </p>
+            <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-400">
+              Predict sprint failures, monitor health metrics, and optimize your agile workflow with machine learning-powered insights
+            </p>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/dashboard"
+                className="group rounded-lg bg-white px-8 py-4 text-base font-semibold text-gray-900 shadow-lg transition-all hover:bg-gray-100 hover:shadow-xl"
+              >
+                Get Started
+                <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
+                  →
+                </span>
+              </Link>
+              <Link
+                href="/dashboard"
+                className="rounded-lg border border-gray-700 bg-transparent px-8 py-4 text-base font-semibold text-white transition-all hover:border-gray-600 hover:bg-gray-800/50"
+              >
+                View Dashboard
+              </Link>
+            </div>
           </div>
-          <h1 className="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-gray-900 via-orange-600 to-amber-600 dark:from-white dark:via-orange-400 dark:to-amber-400 bg-clip-text text-transparent mb-4">
-            ScrumMate AI
-          </h1>
-          <p className="text-2xl md:text-3xl text-gray-700 dark:text-gray-300 mb-3 font-semibold">
-            AI-Powered Sprint Risk Analysis
-          </p>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Predict sprint failures, monitor health metrics, and optimize your agile workflow with machine learning
-          </p>
         </div>
+      </section>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+      {/* Features Section */}
+      <section className="relative py-16 lg:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+              Built for modern agile teams
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-gray-400">
+              Everything you need to monitor, predict, and optimize your sprint performance
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="group rounded-2xl border border-gray-800 bg-gray-900/50 p-8 backdrop-blur-sm transition-all hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10">
+              <div className="mb-6 text-5xl transition-transform group-hover:scale-110">
+                🤖
+              </div>
+              <h3 className="mb-3 text-xl font-bold text-white">ML Predictions</h3>
+              <p className="leading-relaxed text-gray-400">
+                XGBoost-powered sprint failure prediction with feature importance analysis and real-time risk assessment
+              </p>
+            </div>
+
+            <div className="group rounded-2xl border border-gray-800 bg-gray-900/50 p-8 backdrop-blur-sm transition-all hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10">
+              <div className="mb-6 text-5xl transition-transform group-hover:scale-110">
+                📊
+              </div>
+              <h3 className="mb-3 text-xl font-bold text-white">Real-Time Metrics</h3>
+              <p className="leading-relaxed text-gray-400">
+                Track sprint health with live data from Jira & GitHub integrations, updated every 30 seconds
+              </p>
+            </div>
+
+            <div className="group rounded-2xl border border-gray-800 bg-gray-900/50 p-8 backdrop-blur-sm transition-all hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10">
+              <div className="mb-6 text-5xl transition-transform group-hover:scale-110">
+                🎯
+              </div>
+              <h3 className="mb-3 text-xl font-bold text-white">Risk Insights</h3>
+              <p className="leading-relaxed text-gray-400">
+                Actionable recommendations and insights for sprint success, powered by advanced analytics
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Capabilities Section */}
+      <section className="relative border-t border-gray-800 bg-gray-900/30 py-16 lg:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+              Intelligent sprint monitoring
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-gray-400">
+              Complete sprint health tracking in one powerful platform
+            </p>
+          </div>
+
+          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+                  <span className="text-xl">📈</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Health Score Tracking</h3>
+              </div>
+              <p className="text-gray-400">
+                Real-time sprint health scores calculated from multiple metrics including spillover rates, code churn, and PR review delays
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+                  <span className="text-xl">🔍</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Risk Zone Analysis</h3>
+              </div>
+              <p className="text-gray-400">
+                Automated risk zone classification (Low, Medium, High, Critical) with trend analysis and historical comparisons
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+                  <span className="text-xl">📉</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Trend Visualization</h3>
+              </div>
+              <p className="text-gray-400">
+                Interactive charts showing sprint health trends over time with predictive analytics
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+                  <span className="text-xl">🔗</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Jira Integration</h3>
+              </div>
+              <p className="text-gray-400">
+                Seamless connection with Jira to pull sprint data, issue metrics, and team performance indicators
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+                  <span className="text-xl">💻</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">GitHub Integration</h3>
+              </div>
+              <p className="text-gray-400">
+                Connect with GitHub repositories to track PR review times, code churn, and development velocity
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+                  <span className="text-xl">💡</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Actionable Insights</h3>
+              </div>
+              <p className="text-gray-400">
+                Get specific recommendations to improve sprint health based on current metrics and historical patterns
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative border-t border-gray-800 py-16 lg:py-24">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+            Ready to optimize your sprints?
+          </h2>
+          <p className="mb-8 text-lg text-gray-400">
+            Start monitoring your sprint health in real-time with AI-powered insights
+          </p>
           <Link
             href="/dashboard"
-            className="group px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold text-lg hover:from-orange-600 hover:to-amber-600 transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2"
+            className="inline-flex items-center rounded-lg bg-white px-8 py-4 text-base font-semibold text-gray-900 shadow-lg transition-all hover:bg-gray-100 hover:shadow-xl"
           >
-            <span>View Dashboard</span>
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
+            Get Started
+            <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
+              →
+            </span>
           </Link>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="group p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">🤖</div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-              ML Predictions
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              XGBoost-powered sprint failure prediction with feature importance analysis
-            </p>
-          </div>
-          <div className="group p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">📊</div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-              Real-Time Metrics
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Track sprint health with live data from Jira & GitHub integrations
-            </p>
-          </div>
-          <div className="group p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">🎯</div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-              Risk Insights
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Actionable recommendations and insights for sprint success
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-16 text-center">
-          <div className="inline-block p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Ready to get started?
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Monitor your sprint health in real-time
-            </p>
-            <Link
-              href="/dashboard"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg hover:shadow-xl"
-            >
-              Open Dashboard →
-            </Link>
-          </div>
-        </div>
-      </div>
       <Footer />
-    </main>
+    </div>
   );
 }

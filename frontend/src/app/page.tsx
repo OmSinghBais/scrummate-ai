@@ -109,11 +109,6 @@ function Features() {
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
-      {/* TAILWIND DIAGNOSTIC TEST */}
-      <div className="p-10 bg-red-500 text-white text-2xl rounded-xl max-w-7xl mx-auto mt-10">
-        Tailwind Test Box - If you see this styled, Tailwind is working!
-      </div>
-      
       <Navbar />
       <Landing />
       <Features />

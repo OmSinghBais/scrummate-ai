@@ -7,6 +7,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import TeamSwitcher from '@/components/TeamSwitcher';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -14,6 +15,7 @@ export default function SprintDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { data: session } = useSession();
+  const [selectedTeamId, setSelectedTeamId] = useState<number | undefined>();
   const [sprint, setSprint] = useState<any>(null);
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -23,7 +25,7 @@ export default function SprintDetailPage() {
     if (session?.accessToken && id) {
       fetchSprintData();
     }
-  }, [session, id]);
+  }, [session, id, selectedTeamId]);
 
   const fetchSprintData = async () => {
     try {
@@ -114,7 +116,7 @@ export default function SprintDetailPage() {
                 Created: {new Date(sprint.createdAt).toLocaleDateString()}
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
               <Link
                 href={`/sprints/${sprint.id - 1}`}
                 className="px-4 py-2 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors disabled:opacity-50"
@@ -130,10 +132,10 @@ export default function SprintDetailPage() {
               >
                 Next →
               </Link>
+              <div className={`px-4 py-2 rounded-full border ${getRiskColor(sprint.riskZone)}`}>
+                {sprint.riskZone} Risk
+              </div>
             </div>
-          <div className={`px-4 py-2 rounded-full border ${getRiskColor(sprint.riskZone)}`}>
-            {sprint.riskZone} Risk
-          </div>
         </div>
 
         {/* Health Score Overview */}

@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #0a0a0a;
@@ -406,3 +408,4 @@ html {
   );
   z-index: 1;
 }
+

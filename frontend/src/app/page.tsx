@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { useSession, signOut } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // Navbar Component
 function Navbar() {

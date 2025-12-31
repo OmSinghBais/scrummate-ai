@@ -5,8 +5,6 @@ import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import Sidebar from '@/components/Sidebar';
-import PageHeader from '@/components/PageHeader';
 import MetricCard from '@/components/MetricCard';
 import StatsCard from '@/components/StatsCard';
 import ProgressBar from '@/components/ProgressBar';
@@ -141,51 +139,48 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex">
-      <Sidebar />
-      
-      <div className="flex-1 lg:ml-64">
-        <div className="p-8">
-          {refreshing && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="fixed top-24 right-4 z-50 glass-card px-4 py-2 flex items-center gap-2 shadow-lg"
-            >
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
-              <span className="text-sm font-medium text-white">Refreshing...</span>
-            </motion.div>
-          )}
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <div className="p-8">
+        {refreshing && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="fixed top-24 right-4 z-50 glass-card px-4 py-2 flex items-center gap-2 shadow-lg"
+          >
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
+            <span className="text-sm font-medium text-white">Refreshing...</span>
+          </motion.div>
+        )}
 
-          <PageHeader
-            title="Dashboard"
-            subtitle="Real-time sprint health monitoring and AI-powered risk prediction"
-            breadcrumbs={[
-              { label: 'Home', href: '/' },
-              { label: 'Dashboard' },
-            ]}
-            actions={
-              <>
-                {lastUpdated && (
-                  <div className="text-sm text-gray-400 hidden sm:block">
-                    Updated: {lastUpdated.toLocaleTimeString()}
-                  </div>
-                )}
-                <motion.button
-                  onClick={() => fetchData(true)}
-                  disabled={refreshing}
-                  className="glass-card flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:bg-gray-800/50 disabled:cursor-not-allowed disabled:opacity-50"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className={`text-lg ${refreshing ? 'animate-spin' : ''}`}>
-                    {refreshing ? '⏳' : '🔄'}
-                  </span>
-                  <span>Refresh</span>
-                </motion.button>
-              </>
-            }
-          />
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-serif text-white mb-2">Dashboard</h1>
+            <p className="text-neutral-400">Real-time sprint health monitoring and AI-powered risk prediction</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <TeamSwitcher
+              selectedTeamId={selectedTeamId}
+              onTeamChange={setSelectedTeamId}
+            />
+            {lastUpdated && (
+              <div className="text-sm text-gray-400 hidden sm:block">
+                Updated: {lastUpdated.toLocaleTimeString()}
+              </div>
+            )}
+            <motion.button
+              onClick={() => fetchData(true)}
+              disabled={refreshing}
+              className="glass-card flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:bg-gray-800/50 disabled:cursor-not-allowed disabled:opacity-50"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className={`text-lg ${refreshing ? 'animate-spin' : ''}`}>
+                {refreshing ? '⏳' : '🔄'}
+              </span>
+              <span>Refresh</span>
+            </motion.button>
+          </div>
+        </div>
 
           {/* Stats Overview */}
           <ScrollReveal direction="up" delay={0}>
@@ -304,7 +299,7 @@ export default function Dashboard() {
               <Insights items={data.insights} />
             </ScrollReveal>
           </div>
-        </div>
+      </div>
     </div>
   );
 }

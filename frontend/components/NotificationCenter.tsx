@@ -24,7 +24,7 @@ export default function NotificationCenter() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (session?.accessToken) {
+    if (session && (session as any)?.accessToken) {
       fetchNotifications();
       fetchUnreadCount();
       const interval = setInterval(() => {
@@ -35,7 +35,7 @@ export default function NotificationCenter() {
   }, [session]);
 
   const fetchNotifications = async () => {
-    if (!session?.accessToken) return;
+    if (!session || !(session as any)?.accessToken) return;
     setLoading(true);
     try {
       const response = await axios.get(`${API_URL}/notifications`, {
@@ -52,7 +52,7 @@ export default function NotificationCenter() {
   };
 
   const fetchUnreadCount = async () => {
-    if (!session?.accessToken) return;
+    if (!session || !(session as any)?.accessToken) return;
     try {
       const response = await axios.get(`${API_URL}/notifications/unread/count`, {
         headers: {
@@ -66,7 +66,7 @@ export default function NotificationCenter() {
   };
 
   const markAsRead = async (id: number) => {
-    if (!session?.accessToken) return;
+    if (!session || !(session as any)?.accessToken) return;
     try {
       await axios.post(
         `${API_URL}/notifications/${id}/read`,
@@ -87,7 +87,7 @@ export default function NotificationCenter() {
   };
 
   const markAllAsRead = async () => {
-    if (!session?.accessToken) return;
+    if (!session || !(session as any)?.accessToken) return;
     try {
       await axios.post(
         `${API_URL}/notifications/read-all`,

@@ -4,6 +4,8 @@ import { SprintModule } from './sprint/sprint.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { UserModule } from './user/user.module';
 import { TeamModule } from './team/team.module';
+import { ExportModule } from './export/export.module';
+import { NotificationModule } from './notifications/notification.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { TeamModule } from './team/team.module';
     SprintModule,
     UserModule,
     TeamModule,
+    ExportModule,
+    NotificationModule,
   ],
 })
 export class AppModule {}

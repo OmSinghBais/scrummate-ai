@@ -119,4 +119,98 @@ export class SprintService {
       },
     };
   }
+
+  // ✅ Get sprint by ID
+  async getSprintById(id: number, teamId?: number) {
+    const where: any = { id };
+    if (teamId) {
+      where.teamId = teamId;
+    }
+
+    const sprint = await this.sprintRepo.findOne({ where });
+    
+    if (!sprint) {
+      throw new Error('Sprint not found');
+    }
+
+    return sprint;
+  }
+
+  // ✅ Get sprint analytics (detailed metrics)
+  async getSprintAnalytics(id: number, teamId?: number) {
+    const sprint = await this.getSprintById(id, teamId);
+    const allSprints = await this.getHistory(teamId);
+
+    // Calculate velocity (average health score over last 5 sprints)
+    const recentSprints = allSprints.slice(-5);
+    const avgVelocity = recentSprints.length > 0
+      ? recentSprints.reduce((sum, s) => sum + s.healthScore, 0) / recentSprints.length
+      : sprint.healthScore;
+
+    // Calculate trend
+    const previousSprint = allSprints.find(s => s.id < id);
+    const trend = previousSprint
+      ? sprint.healthScore > previousSprint.healthScore ? 'improving' : 'declining'
+      : 'stable';
+
+    return {
+      sprint,
+      analytics: {
+        velocity: Math.round(avgVelocity),
+        trend,
+        metrics: {
+          spilloverRate: sprint.metrics?.spilloverRate || 0,
+          prReviewDelay: sprint.metrics?.prReviewDelay || 0,
+          codeChurn: sprint.metrics?.codeChurn || 0,
+          bugReopenRate: sprint.metrics?.bugReopenRate || 0,
+        },
+        riskFactors: this.analyzeRiskFactors(sprint),
+        recommendations: this.generateRecommendations(sprint),
+      },
+    };
+  }
+
+  private analyzeRiskFactors(sprint: any): string[] {
+    const factors: string[] = [];
+    const metrics = sprint.metrics || {};
+
+    if (metrics.spilloverRate > 30) {
+      factors.push('High story spillover rate');
+    }
+    if (metrics.prReviewDelay > 48) {
+      factors.push('PR review delays exceeding 48 hours');
+    }
+    if (metrics.codeChurn > 50) {
+      factors.push('High code churn indicating instability');
+    }
+    if (metrics.bugReopenRate > 20) {
+      factors.push('Elevated bug reopen rate');
+    }
+
+    return factors;
+  }
+
+  private generateRecommendations(sprint: any): string[] {
+    const recommendations: string[] = [];
+    const metrics = sprint.metrics || {};
+
+    if (metrics.spilloverRate > 30) {
+      recommendations.push('Consider reducing sprint scope or extending sprint duration');
+    }
+    if (metrics.prReviewDelay > 48) {
+      recommendations.push('Implement PR review SLAs and pair programming');
+    }
+    if (metrics.codeChurn > 50) {
+      recommendations.push('Focus on code quality and reduce technical debt');
+    }
+    if (metrics.bugReopenRate > 20) {
+      recommendations.push('Improve bug triage and testing processes');
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push('Sprint is on track. Maintain current practices.');
+    }
+
+    return recommendations;
+  }
 }

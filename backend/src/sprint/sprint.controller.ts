@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards, Request, Param } from '@nestjs/common';
 import { SprintService } from './sprint.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -17,6 +17,18 @@ export class SprintController {
   getHistory(@Query('teamId') teamId?: string) {
     const teamIdNum = teamId ? parseInt(teamId, 10) : undefined;
     return this.sprintService.getHistory(teamIdNum);
+  }
+
+  @Get(':id')
+  getSprintById(@Param('id') id: string, @Query('teamId') teamId?: string) {
+    const teamIdNum = teamId ? parseInt(teamId, 10) : undefined;
+    return this.sprintService.getSprintById(+id, teamIdNum);
+  }
+
+  @Get(':id/analytics')
+  getSprintAnalytics(@Param('id') id: string, @Query('teamId') teamId?: string) {
+    const teamIdNum = teamId ? parseInt(teamId, 10) : undefined;
+    return this.sprintService.getSprintAnalytics(+id, teamIdNum);
   }
 
   @Post('compare')

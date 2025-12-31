@@ -35,6 +35,18 @@ function Navbar() {
         <div className="flex items-center gap-4">
           {session ? (
             <>
+              <Link
+                href="/dashboard"
+                className="text-sm text-neutral-300 hover:text-white transition-colors hidden sm:block"
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="/settings"
+                className="text-sm text-neutral-300 hover:text-white transition-colors hidden sm:block"
+              >
+                Settings
+              </Link>
               <span className="text-sm text-neutral-300 hidden sm:block">
                 {session.user?.name || session.user?.email}
               </span>

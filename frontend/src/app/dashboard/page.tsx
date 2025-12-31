@@ -162,6 +162,7 @@ export default function Dashboard() {
               selectedTeamId={selectedTeamId}
               onTeamChange={setSelectedTeamId}
             />
+            <NotificationCenter />
             {lastUpdated && (
               <div className="text-sm text-gray-400 hidden sm:block">
                 Updated: {lastUpdated.toLocaleTimeString()}
@@ -298,6 +299,84 @@ export default function Dashboard() {
             <ScrollReveal direction="up" delay={400}>
               <Insights items={data.insights} />
             </ScrollReveal>
+          </div>
+
+          {/* Recent Sprints */}
+          {history.length > 0 && (
+            <ScrollReveal direction="up" delay={500}>
+              <div className="rounded-xl bg-white/5 backdrop-blur border border-white/10 p-6 mb-8">
+                <h2 className="text-xl font-semibold text-white mb-4">Recent Sprints</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {history.slice(-6).reverse().map((sprint: any) => (
+                    <Link
+                      key={sprint.id}
+                      href={`/sprints/${sprint.id}`}
+                      className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-white">{sprint.sprintName || `Sprint ${sprint.id}`}</span>
+                        <span className={`text-sm px-2 py-1 rounded-full ${
+                          sprint.riskZone === 'GREEN' ? 'bg-green-500/20 text-green-400' :
+                          sprint.riskZone === 'YELLOW' ? 'bg-yellow-500/20 text-yellow-400' :
+                          sprint.riskZone === 'ORANGE' ? 'bg-orange-500/20 text-orange-400' :
+                          'bg-red-500/20 text-red-400'
+                        }`}>
+                          {sprint.riskZone}
+                        </span>
+                      </div>
+                      <div className={`text-2xl font-bold ${getHealthColor(sprint.healthScore)}`}>
+                        {sprint.healthScore}
+                      </div>
+                      <div className="text-xs text-neutral-400 mt-1">
+                        {new Date(sprint.createdAt).toLocaleDateString()}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          )}
+
+          {/* Quick Actions */}
+          <div className="flex gap-4 mt-8">
+            <Link
+              href="/sprints/compare"
+              className="px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+            >
+              Compare Sprints
+            </Link>
+            <Link
+              href="/settings"
+              className="px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+            >
+              Settings
+            </Link>
+            {history.length > 0 && (
+              <a
+                href={`${API_URL}/export/csv${selectedTeamId ? `?teamId=${selectedTeamId}` : ''}`}
+                download="sprints.csv"
+                className="px-6 py-3 rounded-full bg-teal-500 text-black font-medium hover:bg-teal-400 transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const token = (session as any)?.accessToken;
+                  if (token) {
+                    fetch(`${API_URL}/export/csv${selectedTeamId ? `?teamId=${selectedTeamId}` : ''}`, {
+                      headers: { Authorization: `Bearer ${token}` },
+                    })
+                      .then(res => res.blob())
+                      .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'sprints.csv';
+                        a.click();
+                      });
+                  }
+                }}
+              >
+                Export CSV
+              </a>
+            )}
           </div>
       </div>
     </div>

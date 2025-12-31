@@ -3,8 +3,14 @@
 import Link from 'next/link';
 import Footer from '@/components/Footer';
 
+'use client';
+
+import { useSession, signOut } from 'next-auth/react';
+
 // Navbar Component
 function Navbar() {
+  const { data: session } = useSession();
+
   return (
     <nav className="sticky top-0 z-50 bg-black/70 backdrop-blur border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -17,19 +23,45 @@ function Navbar() {
             Platform
           </Link>
           <Link href="/dashboard" className="hover:text-white transition-colors">
-            Solutions
+            Dashboard
           </Link>
-          <Link href="/" className="hover:text-white transition-colors">
-            Company
-          </Link>
+          {session && (
+            <Link href="/sprints/compare" className="hover:text-white transition-colors">
+              Compare
+            </Link>
+          )}
         </div>
 
-        <Link
-          href="/dashboard"
-          className="px-4 py-2 rounded-full bg-teal-500 text-black text-sm font-medium hover:bg-teal-400 transition-colors"
-        >
-          Book a Demo
-        </Link>
+        <div className="flex items-center gap-4">
+          {session ? (
+            <>
+              <span className="text-sm text-neutral-300 hidden sm:block">
+                {session.user?.name || session.user?.email}
+              </span>
+              <button
+                onClick={() => signOut()}
+                className="px-4 py-2 rounded-full border border-white/20 text-white text-sm hover:bg-white/5 transition-colors"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="px-4 py-2 rounded-full border border-white/20 text-white text-sm hover:bg-white/5 transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="px-4 py-2 rounded-full bg-teal-500 text-black text-sm font-medium hover:bg-teal-400 transition-colors"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

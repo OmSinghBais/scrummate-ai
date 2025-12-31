@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -14,6 +15,7 @@ import Insights from '@/components/Insights';
 import RiskTrendChart from '@/components/RiskTrendChart';
 import ScrollReveal from '@/components/ScrollReveal';
 import GlassCard from '@/components/GlassCard';
+import TeamSwitcher from '@/components/TeamSwitcher';
 
 // Use production backend URL if NEXT_PUBLIC_API_URL is not set
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 
@@ -22,6 +24,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ||
     : 'http://localhost:3001');
 
 export default function Dashboard() {
+  const { data: session } = useSession();
+  const [selectedTeamId, setSelectedTeamId] = useState<number | undefined>();
   const [data, setData] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +34,8 @@ export default function Dashboard() {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async (showRefreshing = false) => {
+    if (!session?.accessToken) return;
+
     try {
       if (showRefreshing) {
         setRefreshing(true);
@@ -38,9 +44,20 @@ export default function Dashboard() {
       }
       setError(null);
       
+      const headers = {
+        Authorization: `Bearer ${(session as any)?.accessToken}`,
+      };
+      
+      const healthUrl = selectedTeamId 
+        ? `${API_URL}/sprint/health?teamId=${selectedTeamId}`
+        : `${API_URL}/sprint/health`;
+      const historyUrl = selectedTeamId
+        ? `${API_URL}/sprint/history?teamId=${selectedTeamId}`
+        : `${API_URL}/sprint/history`;
+      
       const [healthRes, historyRes] = await Promise.all([
-        axios.get(`${API_URL}/sprint/health`),
-        axios.get(`${API_URL}/sprint/history`).catch(() => ({ data: [] })),
+        axios.get(healthUrl, { headers }),
+        axios.get(historyUrl, { headers }).catch(() => ({ data: [] })),
       ]);
       
       setData(healthRes.data);
@@ -56,10 +73,12 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(() => fetchData(), 30000); // Auto-refresh every 30 seconds
-    return () => clearInterval(interval);
-  }, []);
+    if (session?.accessToken) {
+      fetchData();
+      const interval = setInterval(() => fetchData(), 30000);
+      return () => clearInterval(interval);
+    }
+  }, [session, selectedTeamId]);
 
   if (loading) {
     return (
@@ -286,7 +305,6 @@ export default function Dashboard() {
             </ScrollReveal>
           </div>
         </div>
-      </div>
     </div>
   );
 }

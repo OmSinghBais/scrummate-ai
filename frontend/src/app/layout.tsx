@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import Header from '@/components/Header';
 import AnnouncementBar from '@/components/AnnouncementBar';
 
@@ -19,6 +20,7 @@ export default function RootLayout({
         <AnnouncementBar />
         <Header />
         <main className="grow pt-[100px]">{children}</main>
+        <Analytics />
       </body>
     </html>
   );

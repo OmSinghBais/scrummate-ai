@@ -14,7 +14,6 @@ import RiskTrendChart from '@/components/RiskTrendChart';
 import ScrollReveal from '@/components/ScrollReveal';
 import GlassCard from '@/components/GlassCard';
 import TeamSwitcher from '@/components/TeamSwitcher';
-import NotificationCenter from '../../components/NotificationCenter';
 
 // Use production backend URL if NEXT_PUBLIC_API_URL is not set
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 

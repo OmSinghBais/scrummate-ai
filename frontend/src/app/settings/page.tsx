@@ -38,15 +38,27 @@ export default function SettingsPage() {
           <div className="lg:col-span-1">
             <div className="rounded-xl bg-white/5 backdrop-blur border border-white/10 p-4 space-y-2">
               {tabs.map((tab) => {
-                const ButtonComponent = tab.href ? Link : 'button';
-                const props = tab.href
-                  ? { href: tab.href }
-                  : { onClick: () => setActiveTab(tab.id) };
+                if (tab.href) {
+                  return (
+                    <Link
+                      key={tab.id}
+                      href={tab.href}
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                        activeTab === tab.id
+                          ? 'bg-teal-500/20 text-teal-400'
+                          : 'text-neutral-300 hover:bg-white/5'
+                      }`}
+                    >
+                      <span className="mr-2">{tab.icon}</span>
+                      {tab.label}
+                    </Link>
+                  );
+                }
                 
                 return (
-                  <ButtonComponent
+                  <button
                     key={tab.id}
-                    {...props}
+                    onClick={() => setActiveTab(tab.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                       activeTab === tab.id
                         ? 'bg-teal-500/20 text-teal-400'
@@ -55,7 +67,7 @@ export default function SettingsPage() {
                   >
                     <span className="mr-2">{tab.icon}</span>
                     {tab.label}
-                  </ButtonComponent>
+                  </button>
                 );
               })}
             </div>

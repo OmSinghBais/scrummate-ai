@@ -2,9 +2,6 @@
 
 import Link from 'next/link';
 import Footer from '@/components/Footer';
-
-'use client';
-
 import { useSession, signOut } from 'next-auth/react';
 
 // Navbar Component

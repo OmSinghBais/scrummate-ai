@@ -15,9 +15,9 @@ export default function HolographicObject() {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div ref={containerRef} className="relative w-full h-full pointer-events-none overflow-hidden">
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[600px] max-h-[600px]"
         style={{ y, rotateX, opacity }}
       >
         {/* Abstract 3D Holographic Object */}

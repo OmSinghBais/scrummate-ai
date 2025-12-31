@@ -51,13 +51,13 @@ export default function PremiumNavbar() {
   return (
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass backdrop-blur-xl py-3' : 'bg-transparent py-4'
+        scrolled ? 'glass backdrop-blur-xl py-3 border-b border-gray-800/50' : 'bg-transparent py-4'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
@@ -83,23 +83,35 @@ export default function PremiumNavbar() {
                 onMouseEnter={() => setOpenDropdown(item.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <button className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2">
+                <button className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 relative">
                   {item.label}
+                  {openDropdown === item.label && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-teal-500 to-cyan-500"
+                      layoutId="navIndicator"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
                 </button>
                 <AnimatePresence>
                   {openDropdown === item.label && item.dropdown && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full left-0 mt-2 glass rounded-2xl p-4 min-w-[240px] shadow-2xl"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      className="absolute top-full left-0 mt-4 glass rounded-2xl p-6 min-w-[280px] shadow-2xl"
+                      style={{
+                        backdropFilter: 'blur(20px) saturate(180%)',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                      }}
                     >
-                      <div className="space-y-1">
+                      <div className="space-y-2">
                         {item.dropdown.map((subItem) => (
                           <Link
                             key={subItem.label}
                             href={subItem.href}
-                            className="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                            className="block px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
                           >
                             {subItem.label}
                           </Link>

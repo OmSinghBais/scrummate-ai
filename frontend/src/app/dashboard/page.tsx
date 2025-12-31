@@ -162,7 +162,6 @@ export default function Dashboard() {
               selectedTeamId={selectedTeamId}
               onTeamChange={setSelectedTeamId}
             />
-            <NotificationCenter />
             {lastUpdated && (
               <div className="text-sm text-gray-400 hidden sm:block">
                 Updated: {lastUpdated.toLocaleTimeString()}

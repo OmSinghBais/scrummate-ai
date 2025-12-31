@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function SettingsPage() {
@@ -24,6 +25,7 @@ export default function SettingsPage() {
     { id: 'integrations', label: 'Integrations', icon: '🔌' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' },
     { id: 'risk', label: 'Risk Thresholds', icon: '📊' },
+    { id: 'webhooks', label: 'Webhooks', icon: '🔗', href: '/settings/webhooks' },
   ];
 
   return (
@@ -35,20 +37,27 @@ export default function SettingsPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="rounded-xl bg-white/5 backdrop-blur border border-white/10 p-4 space-y-2">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-teal-500/20 text-teal-400'
-                      : 'text-neutral-300 hover:bg-white/5'
-                  }`}
-                >
-                  <span className="mr-2">{tab.icon}</span>
-                  {tab.label}
-                </button>
-              ))}
+              {tabs.map((tab) => {
+                const ButtonComponent = tab.href ? Link : 'button';
+                const props = tab.href
+                  ? { href: tab.href }
+                  : { onClick: () => setActiveTab(tab.id) };
+                
+                return (
+                  <ButtonComponent
+                    key={tab.id}
+                    {...props}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                      activeTab === tab.id
+                        ? 'bg-teal-500/20 text-teal-400'
+                        : 'text-neutral-300 hover:bg-white/5'
+                    }`}
+                  >
+                    <span className="mr-2">{tab.icon}</span>
+                    {tab.label}
+                  </ButtonComponent>
+                );
+              })}
             </div>
           </div>
 

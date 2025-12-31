@@ -338,7 +338,19 @@ export default function Dashboard() {
           )}
 
           {/* Quick Actions */}
-          <div className="flex gap-4 mt-8">
+          <div className="flex flex-wrap gap-4 mt-8">
+            <Link
+              href="/planning"
+              className="px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+            >
+              Sprint Planning
+            </Link>
+            <Link
+              href="/performance"
+              className="px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+            >
+              Team Performance
+            </Link>
             <Link
               href="/sprints/compare"
               className="px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"

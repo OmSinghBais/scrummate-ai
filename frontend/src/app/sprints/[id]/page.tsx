@@ -98,16 +98,39 @@ export default function SprintDetailPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] p-8">
       <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <TeamSwitcher
+            selectedTeamId={selectedTeamId}
+            onTeamChange={setSelectedTeamId}
+          />
+        </div>
         <div className="mb-8 flex items-center justify-between">
-          <div>
-            <Link href="/dashboard" className="text-teal-400 hover:text-teal-300 mb-2 inline-block">
-              ← Back to Dashboard
-            </Link>
-            <h1 className="text-4xl font-serif text-white mb-2">{sprint.sprintName || 'Sprint Details'}</h1>
-            <p className="text-neutral-400">
-              Created: {new Date(sprint.createdAt).toLocaleDateString()}
-            </p>
-          </div>
+            <div>
+              <Link href="/dashboard" className="text-teal-400 hover:text-teal-300 mb-2 inline-block">
+                ← Back to Dashboard
+              </Link>
+              <h1 className="text-4xl font-serif text-white mb-2">{sprint.sprintName || 'Sprint Details'}</h1>
+              <p className="text-neutral-400">
+                Created: {new Date(sprint.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Link
+                href={`/sprints/${sprint.id - 1}`}
+                className="px-4 py-2 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors disabled:opacity-50"
+                onClick={(e) => {
+                  if (sprint.id <= 1) e.preventDefault();
+                }}
+              >
+                ← Previous
+              </Link>
+              <Link
+                href={`/sprints/${sprint.id + 1}`}
+                className="px-4 py-2 rounded-full border border-white/20 text-white hover:bg-white/5 transition-colors"
+              >
+                Next →
+              </Link>
+            </div>
           <div className={`px-4 py-2 rounded-full border ${getRiskColor(sprint.riskZone)}`}>
             {sprint.riskZone} Risk
           </div>

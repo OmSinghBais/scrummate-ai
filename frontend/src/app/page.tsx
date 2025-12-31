@@ -22,13 +22,21 @@ function Navbar() {
           <Link href="/" className="hover:text-white transition-colors">
             Platform
           </Link>
-          <Link href="/dashboard" className="hover:text-white transition-colors">
-            Dashboard
-          </Link>
           {session && (
-            <Link href="/sprints/compare" className="hover:text-white transition-colors">
-              Compare
-            </Link>
+            <>
+              <Link href="/dashboard" className="hover:text-white transition-colors">
+                Dashboard
+              </Link>
+              <Link href="/planning" className="hover:text-white transition-colors">
+                Planning
+              </Link>
+              <Link href="/performance" className="hover:text-white transition-colors">
+                Performance
+              </Link>
+              <Link href="/sprints/compare" className="hover:text-white transition-colors">
+                Compare
+              </Link>
+            </>
           )}
         </div>
 

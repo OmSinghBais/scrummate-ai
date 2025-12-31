@@ -16,7 +16,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className="flex min-h-screen min-w-[340px] flex-col bg-black font-sans text-white antialiased overflow-x-hidden">
-        <PremiumNavbar />
         {children}
         <Analytics />
       </body>

@@ -3,11 +3,17 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import Sidebar from '@/components/Sidebar';
+import PageHeader from '@/components/PageHeader';
 import MetricCard from '@/components/MetricCard';
+import StatsCard from '@/components/StatsCard';
+import ProgressBar from '@/components/ProgressBar';
 import RiskBadge from '@/components/RiskBadge';
 import Insights from '@/components/Insights';
 import RiskTrendChart from '@/components/RiskTrendChart';
-import Footer from '@/components/Footer';
+import ScrollReveal from '@/components/ScrollReveal';
+import GlassCard from '@/components/GlassCard';
 
 // Use production backend URL if NEXT_PUBLIC_API_URL is not set
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 
@@ -57,14 +63,16 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-page-background">
+      <div className="flex min-h-screen items-center justify-center bg-[#0B0C0E]">
         <div className="text-center">
-          <div className="relative">
-            <div className="mx-auto mb-6 h-16 w-16 animate-spin rounded-full border-4 border-gray-800 border-t-orange-500"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-2xl">🚀</span>
-            </div>
-          </div>
+          <motion.div
+            className="relative mx-auto mb-6 h-16 w-16"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          >
+            <div className="absolute inset-0 border-4 border-gray-800 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-orange-500 border-t-transparent rounded-full"></div>
+          </motion.div>
           <p className="text-lg font-medium text-white">Loading dashboard...</p>
           <p className="mt-2 text-sm text-gray-400">Fetching sprint data</p>
         </div>
@@ -74,8 +82,8 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-page-background p-10">
-        <div className="max-w-md rounded-2xl border border-gray-800 bg-gray-900/50 p-8 text-center backdrop-blur-sm">
+      <div className="flex min-h-screen items-center justify-center bg-[#0B0C0E] p-10">
+        <GlassCard className="max-w-md p-8 text-center">
           <div className="mb-4 text-6xl">⚠️</div>
           <h2 className="mb-3 text-2xl font-bold text-white">Error Loading Dashboard</h2>
           <p className="mb-2 text-gray-400">{error}</p>
@@ -96,7 +104,7 @@ export default function Dashboard() {
               Go Home
             </Link>
           </div>
-        </div>
+        </GlassCard>
       </div>
     );
   }
@@ -114,124 +122,171 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-page-background animate-fade-in">
-      {refreshing && (
-        <div className="fixed top-20 right-4 z-50 rounded-lg border border-gray-800 bg-gray-900/95 backdrop-blur-lg px-4 py-2 flex items-center gap-2 shadow-lg animate-fade-in">
-          <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
-          <span className="text-sm font-medium text-white">Refreshing...</span>
-        </div>
-      )}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-10">
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="mb-2 text-4xl font-bold text-white">Dashboard</h1>
-              <p className="text-gray-400">
-                Real-time sprint health monitoring and AI-powered risk prediction
-              </p>
+    <div className="min-h-screen bg-[#0B0C0E] flex">
+      <Sidebar />
+      
+      <div className="flex-1 lg:ml-64">
+        <div className="p-8">
+          {refreshing && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed top-24 right-4 z-50 glass-card px-4 py-2 flex items-center gap-2 shadow-lg"
+            >
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
+              <span className="text-sm font-medium text-white">Refreshing...</span>
+            </motion.div>
+          )}
+
+          <PageHeader
+            title="Dashboard"
+            subtitle="Real-time sprint health monitoring and AI-powered risk prediction"
+            breadcrumbs={[
+              { label: 'Home', href: '/' },
+              { label: 'Dashboard' },
+            ]}
+            actions={
+              <>
+                {lastUpdated && (
+                  <div className="text-sm text-gray-400 hidden sm:block">
+                    Updated: {lastUpdated.toLocaleTimeString()}
+                  </div>
+                )}
+                <motion.button
+                  onClick={() => fetchData(true)}
+                  disabled={refreshing}
+                  className="glass-card flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:bg-gray-800/50 disabled:cursor-not-allowed disabled:opacity-50"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className={`text-lg ${refreshing ? 'animate-spin' : ''}`}>
+                    {refreshing ? '⏳' : '🔄'}
+                  </span>
+                  <span>Refresh</span>
+                </motion.button>
+              </>
+            }
+          />
+
+          {/* Stats Overview */}
+          <ScrollReveal direction="up" delay={0}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <StatsCard
+                title="Health Score"
+                value={data.healthScore}
+                change={5}
+                trend="up"
+                icon="📊"
+                color="green"
+              />
+              <StatsCard
+                title="Active Sprints"
+                value="12"
+                change={2}
+                trend="up"
+                icon="🏃"
+                color="blue"
+              />
+              <StatsCard
+                title="Risk Alerts"
+                value="3"
+                change={-1}
+                trend="down"
+                icon="⚠️"
+                color="red"
+              />
+              <StatsCard
+                title="Team Velocity"
+                value="87%"
+                change={12}
+                trend="up"
+                icon="⚡"
+                color="orange"
+              />
             </div>
-            <div className="flex items-center gap-3">
-              {lastUpdated && (
-                <div className="text-sm text-gray-400">
-                  Updated: {lastUpdated.toLocaleTimeString()}
+          </ScrollReveal>
+
+          {/* Health Score Card */}
+          <ScrollReveal direction="up" delay={100}>
+            <GlassCard className="mb-8 p-8">
+              <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex-1">
+                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
+                    Current Sprint Health Score
+                  </h2>
+                  <div className="mb-6 flex items-baseline gap-4">
+                    <motion.div
+                      className={`text-7xl font-extrabold ${getHealthColor(data.healthScore)}`}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                    >
+                      {data.healthScore}
+                    </motion.div>
+                    <div className="text-3xl font-medium text-gray-500">/ 100</div>
+                  </div>
+                  <ProgressBar
+                    value={data.healthScore}
+                    max={100}
+                    showValue={false}
+                  />
                 </div>
-              )}
-              <button
-                onClick={() => fetchData(true)}
-                disabled={refreshing}
-                className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/50 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <span className={`text-lg ${refreshing ? 'animate-spin' : ''}`}>
-                  {refreshing ? '⏳' : '🔄'}
-                </span>
-                <span>Refresh</span>
-              </button>
-              <Link
-                href="/"
-                className="rounded-lg border border-gray-800 bg-transparent px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-700 hover:bg-gray-800/50"
-              >
-                Home
-              </Link>
-            </div>
-          </div>
-        </div>
+                <RiskBadge zone={data.riskZone} />
+              </div>
 
-        {/* Health Score Section */}
-        <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/50 p-8 backdrop-blur-sm">
-          <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex-1">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
-                Current Sprint Health Score
-              </h2>
-              <div className="mb-4 flex items-baseline gap-4">
-                <div className={`text-7xl font-extrabold ${getHealthColor(data.healthScore)}`}>
-                  {data.healthScore}
+              {/* ML Prediction */}
+              <motion.div
+                className="rounded-xl border-2 border-orange-500/30 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 p-5"
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-gray-800 p-2 shadow-sm">
+                    <span className="text-2xl">🤖</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      AI Prediction
+                    </p>
+                    <p className="text-lg font-bold text-orange-400">{data.mlPrediction}</p>
+                  </div>
                 </div>
-                <div className="text-3xl font-medium text-gray-500">/ 100</div>
-              </div>
-              {/* Health Bar */}
-              <div className="h-3 w-full overflow-hidden rounded-full bg-gray-800">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    data.healthScore >= 70
-                      ? 'bg-gradient-to-r from-green-500 to-green-600'
-                      : data.healthScore >= 50
-                        ? 'bg-gradient-to-r from-yellow-400 to-yellow-500'
-                        : data.healthScore >= 30
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600'
-                          : 'bg-gradient-to-r from-red-500 to-red-600'
-                  }`}
-                  style={{ width: `${data.healthScore}%` }}
-                />
-              </div>
+              </motion.div>
+            </GlassCard>
+          </ScrollReveal>
+
+          {/* Metrics Grid */}
+          <ScrollReveal direction="up" delay={200}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <MetricCard
+                title="Spillover Rate"
+                value={`${data.metrics.spilloverRate}%`}
+              />
+              <MetricCard
+                title="PR Review Delay"
+                value={`${Math.round(data.metrics.prReviewDelay || 0)}h`}
+              />
+              <MetricCard
+                title="Code Churn"
+                value={`${data.metrics.codeChurn}%`}
+              />
+              <MetricCard
+                title="Bug Reopen Rate"
+                value={`${data.metrics.bugReopenRate}%`}
+              />
             </div>
-            <RiskBadge zone={data.riskZone} />
+          </ScrollReveal>
+
+          {/* Chart and Insights */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <ScrollReveal direction="up" delay={300}>
+              <RiskTrendChart data={history} />
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={400}>
+              <Insights items={data.insights} />
+            </ScrollReveal>
           </div>
-
-          {/* ML Prediction */}
-          <div className="rounded-xl border-2 border-orange-500/30 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 p-5">
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-gray-800 p-2 shadow-sm">
-                <span className="text-2xl">🤖</span>
-              </div>
-              <div className="flex-1">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  AI Prediction
-                </p>
-                <p className="text-lg font-bold text-orange-400">{data.mlPrediction}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <MetricCard
-            title="Spillover Rate"
-            value={`${data.metrics.spilloverRate}%`}
-          />
-          <MetricCard
-            title="PR Review Delay"
-            value={`${Math.round(data.metrics.prReviewDelay || 0)}h`}
-          />
-          <MetricCard
-            title="Code Churn"
-            value={`${data.metrics.codeChurn}%`}
-          />
-          <MetricCard
-            title="Bug Reopen Rate"
-            value={`${data.metrics.bugReopenRate}%`}
-          />
-        </div>
-
-        {/* Chart and Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <RiskTrendChart data={history} />
-          <Insights items={data.insights} />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

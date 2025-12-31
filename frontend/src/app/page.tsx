@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col overflow-hidden">
+    <div className="flex min-h-screen flex-col overflow-hidden pt-[105px]">
       {/* Hero Section with 3D Effects */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-mesh">
         {/* Animated Background Gradient */}

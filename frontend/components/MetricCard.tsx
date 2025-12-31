@@ -30,11 +30,11 @@ export default function MetricCard({ title, value, trend }: { title: string; val
   const icon = metricIcons[title] || '📈';
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/50 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10">
+    <div className="group relative overflow-hidden rounded-2xl glass-card p-6 shadow-md transition-all duration-300 hover:-translate-y-2 hover:scale-105 card-3d">
       {/* Gradient background on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 to-amber-500/0 transition-all duration-300 group-hover:from-orange-500/10 group-hover:to-amber-500/10" />
 
-      <div className="relative">
+      <div className="relative transform-3d">
         <div className="mb-4 flex items-center justify-between">
           <div className="rounded-lg bg-gray-800 p-2">
             <span className="text-2xl">{icon}</span>

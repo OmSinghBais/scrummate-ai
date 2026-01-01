@@ -13,7 +13,7 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  async register(email: string, password: string, name: string) {
+  async register(email: string, password: string, name?: string) {
     const existingUser = await this.userRepository.findOne({ where: { email } });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
@@ -23,12 +23,23 @@ export class UserService {
     const user = this.userRepository.create({
       email,
       password: hashedPassword,
-      name,
+      name: name || email.split('@')[0], // Use email prefix if name not provided
     });
 
     const savedUser = await this.userRepository.save(user);
     const { password: _, ...userWithoutPassword } = savedUser;
-    return userWithoutPassword;
+    
+    // Return user with access token (auto-login after registration)
+    const payload = { email: savedUser.email, sub: savedUser.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: savedUser.id,
+        email: savedUser.email,
+        name: savedUser.name,
+        teams: [],
+      },
+    };
   }
 
   async validateUser(email: string, password: string) {

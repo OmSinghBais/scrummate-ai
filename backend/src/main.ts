@@ -11,7 +11,8 @@ async function bootstrap() {
       'https://scrummate-ai-2t6u.vercel.app',
       /\.vercel\.app$/,
     ],
-    methods: 'GET,POST',
+    methods: 'GET,POST,PUT,DELETE,PATCH',
+    credentials: true,
   });
 
   const port = process.env.PORT || 4000;

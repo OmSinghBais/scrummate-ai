@@ -5,7 +5,18 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+// Get API URL - use environment variable or detect production
+const getApiUrl = () => {
+  if (typeof window !== 'undefined') {
+    // Client-side: check if we're on Vercel
+    if (window.location.hostname.includes('vercel.app')) {
+      return process.env.NEXT_PUBLIC_API_URL || 'https://scrummate-ai-21yl.onrender.com';
+    }
+  }
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+};
+
+const API_URL = getApiUrl();
 
 export default function SignupPage() {
   const router = useRouter();

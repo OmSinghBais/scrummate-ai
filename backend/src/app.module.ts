@@ -16,10 +16,12 @@ import { WebhookModule } from './webhooks/webhook.module';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       autoLoadEntities: true,
-      synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      synchronize: process.env.NODE_ENV !== 'production', // Only sync in dev
+      ssl: process.env.DATABASE_URL?.includes('sslmode=require') || process.env.DATABASE_URL?.includes('render.com')
+        ? { rejectUnauthorized: false }
+        : false,
+      retryAttempts: 5,
+      retryDelay: 3000,
     }),
     MetricsModule,
     SprintModule,

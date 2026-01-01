@@ -54,14 +54,24 @@ export default function SignupPage() {
     try {
       // Get API URL at runtime (not at module load)
       const apiUrl = getApiUrl();
-      const registerUrl = `${apiUrl}/auth/register`;
+      // Ensure we have a full URL (not relative)
+      const registerUrl = apiUrl.startsWith('http') 
+        ? `${apiUrl}/auth/register`
+        : `https://${apiUrl}/auth/register`;
       
       console.log('Registration attempt:', {
         apiUrl,
         registerUrl,
         hasEnvVar: !!process.env.NEXT_PUBLIC_API_URL,
+        envVarValue: process.env.NEXT_PUBLIC_API_URL,
         hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+        fullUrl: registerUrl,
       });
+      
+      // Validate URL before making request
+      if (!registerUrl.startsWith('http://') && !registerUrl.startsWith('https://')) {
+        throw new Error(`Invalid API URL: ${registerUrl}. Please configure NEXT_PUBLIC_API_URL.`);
+      }
       
       const response = await axios.post(registerUrl, {
         name,
@@ -72,6 +82,7 @@ export default function SignupPage() {
           'Content-Type': 'application/json',
         },
         timeout: 10000, // 10 second timeout
+        validateStatus: (status) => status < 500, // Don't throw on 4xx errors
       });
 
       // Auto-login after successful registration if token is returned

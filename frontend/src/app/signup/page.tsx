@@ -25,8 +25,6 @@ function getApiUrl(): string {
   return 'http://localhost:3001';
 }
 
-// Use a function that gets called at runtime, not at module load time
-const getApiUrlRuntime = () => getApiUrl();
 
 export default function SignupPage() {
   const router = useRouter();
@@ -54,10 +52,26 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, {
+      // Get API URL at runtime (not at module load)
+      const apiUrl = getApiUrl();
+      const registerUrl = `${apiUrl}/auth/register`;
+      
+      console.log('Registration attempt:', {
+        apiUrl,
+        registerUrl,
+        hasEnvVar: !!process.env.NEXT_PUBLIC_API_URL,
+        hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+      });
+      
+      const response = await axios.post(registerUrl, {
         name,
         email,
         password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 10000, // 10 second timeout
       });
 
       // Auto-login after successful registration if token is returned
@@ -70,12 +84,30 @@ export default function SignupPage() {
       }
     } catch (err: any) {
       console.error('Registration error:', err);
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
-                          (err.response?.status === 404 ? 'Backend server not found. Please check API URL.' : '') ||
-                          (err.response?.status === 500 ? 'Server error. Please try again later.' : '') ||
-                          err.message || 
-                          'Registration failed. Please try again.';
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        url: err.config?.url,
+        method: err.config?.method,
+      });
+      
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (err.response) {
+        // Server responded with error
+        errorMessage = err.response.data?.message || 
+                      err.response.data?.error || 
+                      `Server error (${err.response.status}): ${err.response.statusText || 'Unknown error'}`;
+      } else if (err.request) {
+        // Request made but no response (network error, CORS, etc.)
+        errorMessage = 'Cannot connect to backend server. Please check your connection or contact support.';
+      } else {
+        // Error in request setup
+        errorMessage = err.message || 'An unexpected error occurred.';
+      }
+      
       setError(errorMessage);
     } finally {
       setLoading(false);

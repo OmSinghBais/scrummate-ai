@@ -48,15 +48,20 @@ export class SprintService {
     const sprintName = `Sprint ${sprintCount + 1}`;
 
     // ✅ Persist snapshot
-    await this.sprintRepo.save({
+    const snapshotData: Partial<SprintSnapshot> = {
       sprintName,
       healthScore: risk.score,
       riskZone: risk.zone,
       metrics,
       mlPrediction,
       mlExplanation,
-      teamId: teamId || null,
-    });
+    };
+    
+    if (teamId !== undefined) {
+      snapshotData.teamId = teamId;
+    }
+    
+    await this.sprintRepo.save(snapshotData);
 
     return {
       sprintName,

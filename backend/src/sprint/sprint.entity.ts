@@ -30,7 +30,7 @@ export class SprintSnapshot {
   team: Team;
 
   @Column({ nullable: true })
-  teamId: number;
+  teamId?: number;
 
   @CreateDateColumn()
   createdAt: Date;

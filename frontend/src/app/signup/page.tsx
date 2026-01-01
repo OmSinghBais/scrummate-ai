@@ -44,15 +44,29 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      await axios.post(`${API_URL}/auth/register`, {
+      const response = await axios.post(`${API_URL}/auth/register`, {
         name,
         email,
         password,
       });
 
-      router.push('/login?registered=true');
+      // Auto-login after successful registration if token is returned
+      if (response.data.access_token) {
+        // Store token temporarily (NextAuth will handle session)
+        sessionStorage.setItem('temp_token', response.data.access_token);
+        router.push('/login?registered=true&token=' + encodeURIComponent(response.data.access_token));
+      } else {
+        router.push('/login?registered=true');
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      console.error('Registration error:', err);
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error || 
+                          (err.response?.status === 404 ? 'Backend server not found. Please check API URL.' : '') ||
+                          (err.response?.status === 500 ? 'Server error. Please try again later.' : '') ||
+                          err.message || 
+                          'Registration failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

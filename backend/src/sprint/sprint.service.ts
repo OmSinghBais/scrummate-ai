@@ -57,9 +57,7 @@ export class SprintService {
       mlExplanation,
     };
     
-    if (teamId !== undefined) {
-      snapshotData.teamId = teamId;
-    }
+    snapshotData.teamId = teamId ?? null;
     
     await this.sprintRepo.save(snapshotData);
 

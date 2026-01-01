@@ -136,7 +136,13 @@ export default function SignupPage() {
 
           {error && (
             <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-              {error}
+              <div className="font-medium mb-1">Registration Error</div>
+              <div>{error}</div>
+              {process.env.NODE_ENV === 'development' && (
+                <div className="mt-2 text-xs text-red-300">
+                  Check browser console for API URL details
+                </div>
+              )}
             </div>
           )}
 

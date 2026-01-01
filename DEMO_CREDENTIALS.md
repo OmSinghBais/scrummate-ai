@@ -51,9 +51,15 @@ Then log in with:
 
 1. **Backend Must Be Working:** The login will only work after the backend is properly deployed on Render (see `BACKEND_404_FIX.md`)
 
-2. **For Production:** Never use demo credentials in production! Always create real user accounts.
+2. **Current Status:** ⚠️ Backend is returning 404 - routes not registered. You need to **redeploy the backend on Render** first.
 
-3. **Security:** The demo password is intentionally simple for testing. Use strong passwords in production.
+3. **Quick Workaround:** Use the **signup page** on your frontend (it might work if the frontend can reach the backend):
+   - Go to: `https://your-vercel-url.vercel.app/signup`
+   - Create account with: `demo@scrummate.ai` / `Demo123!@#`
+
+4. **For Production:** Never use demo credentials in production! Always create real user accounts.
+
+5. **Security:** The demo password is intentionally simple for testing. Use strong passwords in production.
 
 ## 🧪 Testing Login
 

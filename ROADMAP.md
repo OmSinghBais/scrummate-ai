@@ -252,6 +252,7 @@
 - User-defined metrics
 - Custom calculations
 - Metric formulas
+
 - Metric templates
 
 ### 25. **Comparative Analysis** 📊

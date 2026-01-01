@@ -5,18 +5,28 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
 
-// Get API URL - use environment variable or detect production
-const getApiUrl = () => {
+// Get API URL - prioritize environment variable, then detect production
+function getApiUrl(): string {
+  // Always check environment variable first
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  
+  // Client-side detection for production
   if (typeof window !== 'undefined') {
-    // Client-side: check if we're on Vercel
-    if (window.location.hostname.includes('vercel.app')) {
-      return process.env.NEXT_PUBLIC_API_URL || 'https://scrummate-ai-21yl.onrender.com';
+    const hostname = window.location.hostname;
+    // If on Vercel, use Render backend
+    if (hostname.includes('vercel.app')) {
+      return 'https://scrummate-ai-21yl.onrender.com';
     }
   }
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-};
+  
+  // Default to localhost for development
+  return 'http://localhost:3001';
+}
 
-const API_URL = getApiUrl();
+// Use a function that gets called at runtime, not at module load time
+const getApiUrlRuntime = () => getApiUrl();
 
 export default function SignupPage() {
   const router = useRouter();

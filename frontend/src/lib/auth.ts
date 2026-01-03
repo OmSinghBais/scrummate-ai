@@ -41,10 +41,10 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        const apiUrl = getApiUrl();
+        const loginUrl = `${apiUrl}/auth/login`;
+
         try {
-          const apiUrl = getApiUrl();
-          const loginUrl = `${apiUrl}/auth/login`;
-          
           console.log('Login attempt:', {
             apiUrl,
             loginUrl,
@@ -97,12 +97,14 @@ export const authOptions: NextAuthOptions = {
           // Provide more specific error information
           if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
             console.error('Cannot connect to backend server. Check NEXT_PUBLIC_API_URL:', apiUrl);
-            throw new Error('Cannot connect to backend server. Please check server configuration.');
+            // Don't throw - return null to show generic error
+            return null;
           }
           
           if (error.response?.status === 404) {
-            console.error('Backend endpoint not found. Check if backend is deployed correctly.');
-            throw new Error('Backend endpoint not found. Please check server configuration.');
+            console.error('Backend endpoint not found. Check if backend is deployed correctly. URL:', loginUrl);
+            // Don't throw - return null to show generic error
+            return null;
           }
           
           if (error.response?.status === 401) {
@@ -112,7 +114,8 @@ export const authOptions: NextAuthOptions = {
           
           if (error.response?.status === 500) {
             console.error('Backend server error. Check backend logs.');
-            throw new Error('Backend server error. Please try again later.');
+            // Don't throw - return null to show generic error
+            return null;
           }
           
           // For other errors, return null to show generic error

@@ -40,12 +40,16 @@ function LoginForm() {
       if (result?.error) {
         console.error('Login failed:', result.error);
         // Provide more specific error messages
-        if (result.error.includes('fetch') || result.error.includes('network')) {
-          setError('Cannot connect to server. Please check your connection or try again later.');
-        } else if (result.error.includes('401') || result.error.includes('Unauthorized')) {
-          setError('Invalid email or password. Please check your credentials.');
+        if (result.error.includes('fetch') || result.error.includes('network') || result.error.includes('ECONNREFUSED')) {
+          setError('Cannot connect to backend server. Please check your connection or contact support if the issue persists.');
+        } else if (result.error.includes('404') || result.error.includes('not found')) {
+          setError('Backend endpoint not found. The server may be misconfigured.');
+        } else if (result.error.includes('500') || result.error.includes('server error')) {
+          setError('Backend server error. Please try again later or contact support.');
+        } else if (result.error.includes('CredentialsSignin') || result.error.includes('401') || result.error.includes('Unauthorized')) {
+          setError('Invalid email or password. Please check your credentials and try again.');
         } else {
-          setError('Login failed: ' + result.error);
+          setError('Login failed: ' + result.error + '. Please check the browser console for details.');
         }
       } else if (result?.ok) {
         // Successful login

@@ -83,13 +83,39 @@ export const authOptions: NextAuthOptions = {
           console.error('Login: No access token in response');
           return null;
         } catch (error: any) {
-          console.error('Login error:', {
+          const errorDetails = {
             message: error.message,
             response: error.response?.data,
             status: error.response?.status,
             statusText: error.response?.statusText,
             url: error.config?.url,
-          });
+            code: error.code,
+          };
+          
+          console.error('Login error:', errorDetails);
+          
+          // Provide more specific error information
+          if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+            console.error('Cannot connect to backend server. Check NEXT_PUBLIC_API_URL:', apiUrl);
+            throw new Error('Cannot connect to backend server. Please check server configuration.');
+          }
+          
+          if (error.response?.status === 404) {
+            console.error('Backend endpoint not found. Check if backend is deployed correctly.');
+            throw new Error('Backend endpoint not found. Please check server configuration.');
+          }
+          
+          if (error.response?.status === 401) {
+            // Invalid credentials - return null to show generic error
+            return null;
+          }
+          
+          if (error.response?.status === 500) {
+            console.error('Backend server error. Check backend logs.');
+            throw new Error('Backend server error. Please try again later.');
+          }
+          
+          // For other errors, return null to show generic error
           return null;
         }
       },

@@ -93,14 +93,20 @@ To get real data, connect your team's tools:
    - Copy the token (you'll only see it once!)
 
 2. **Configure in ScrumMate AI**
-   - Go to **Settings** → **Integrations** tab
-   - Find **Jira Integration** section
-   - Enter:
-     - **Jira Base URL**: `https://your-company.atlassian.net`
-     - **Email**: Your Jira email address
-     - **API Token**: Paste the token you copied
-   - Click **"Test Connection"**
-   - If successful, click **"Save"**
+   - **Navigate to Settings:**
+     - Click on **Settings** (⚙️) in the top navigation bar
+     - Or go directly to: `https://scrummate-ai-2t6u.vercel.app/settings`
+   - **Open Integrations Tab:**
+     - In the left sidebar, click on **"🔌 Integrations"** tab
+   - **Configure Jira:**
+     - You'll see the **"Jira"** section with form fields
+     - Enter:
+       - **Jira Base URL**: `https://your-company.atlassian.net`
+       - **Email**: Your Jira email address
+       - **API Token**: Paste the token you copied (it will be hidden as you type)
+     - Click **"Test Connection"** to verify it works
+     - If successful, you'll see a green **"Connected"** badge
+     - Click **"Save"** to store the configuration
 
 **What This Gives You:**
 - Active sprint detection
@@ -118,14 +124,20 @@ To get real data, connect your team's tools:
    - Copy the token (you'll only see it once!)
 
 2. **Configure in ScrumMate AI**
-   - Go to **Settings** → **Integrations** tab
-   - Find **GitHub Integration** section
-   - Enter:
-     - **GitHub Token**: Paste your token
-     - **Owner**: Your GitHub organization or username
-     - **Repository**: Your repository name (e.g., "my-app")
-   - Click **"Test Connection"**
-   - If successful, click **"Save"**
+   - **Navigate to Settings:**
+     - Click on **Settings** (⚙️) in the top navigation bar
+     - Or go directly to: `https://scrummate-ai-2t6u.vercel.app/settings`
+   - **Open Integrations Tab:**
+     - In the left sidebar, click on **"🔌 Integrations"** tab
+   - **Configure GitHub:**
+     - Scroll down to the **"GitHub"** section
+     - Enter:
+       - **GitHub Personal Access Token**: Paste your token (it will be hidden)
+       - **Owner**: Your GitHub organization or username (e.g., "my-org" or "my-username")
+       - **Repository Name**: Your repository name (e.g., "my-app")
+     - Click **"Test Connection"** to verify it works
+     - If successful, you'll see a green **"Connected"** badge
+     - Click **"Save"** to store the configuration
 
 **What This Gives You:**
 - PR review delay tracking

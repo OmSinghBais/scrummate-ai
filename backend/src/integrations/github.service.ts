@@ -95,10 +95,21 @@ export class GitHubService {
 
       return prsWithDetails;
     } catch (error: any) {
-      this.logger.error(
-        'Failed to fetch pull requests from GitHub',
-        error?.message,
-      );
+      // Handle 401 (Unauthorized) as a warning, not an error
+      if (error.response?.status === 401) {
+        this.logger.warn(
+          'GitHub authentication failed (401). Token may be invalid or expired. Check GITHUB_TOKEN.',
+        );
+      } else if (error.response?.status === 404) {
+        this.logger.warn(
+          'GitHub repository not found (404). Check GITHUB_OWNER and GITHUB_REPO.',
+        );
+      } else {
+        this.logger.error(
+          'Failed to fetch pull requests from GitHub',
+          error?.message || error,
+        );
+      }
       return [];
     }
   }
@@ -138,10 +149,13 @@ export class GitHubService {
 
       return Math.round(avgDelay);
     } catch (error: any) {
-      this.logger.error(
-        'Failed to calculate PR review delay',
-        error?.message,
-      );
+      // Don't log as error if it's an auth issue (already logged in getRecentPullRequests)
+      if (error.response?.status !== 401 && error.response?.status !== 404) {
+        this.logger.error(
+          'Failed to calculate PR review delay',
+          error?.message,
+        );
+      }
       return 0;
     }
   }
@@ -170,10 +184,13 @@ export class GitHubService {
       const churnRate = (deletions / totalChanges) * 100;
       return Math.round(churnRate);
     } catch (error: any) {
-      this.logger.error(
-        'Failed to calculate code churn',
-        error?.message,
-      );
+      // Don't log as error if it's an auth issue (already logged in getRecentPullRequests)
+      if (error.response?.status !== 401 && error.response?.status !== 404) {
+        this.logger.error(
+          'Failed to calculate code churn',
+          error?.message,
+        );
+      }
       return 0;
     }
   }

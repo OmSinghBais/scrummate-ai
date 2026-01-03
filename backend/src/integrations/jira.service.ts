@@ -35,22 +35,39 @@ export class JiraService {
     try {
       // Get active sprint board
       const boardsRes = await this.client.get('/rest/agile/1.0/board');
-      const boards = boardsRes.data.values;
-      if (boards.length === 0) return null;
+      const boards = boardsRes.data?.values;
+      
+      if (!boards || !Array.isArray(boards) || boards.length === 0) {
+        this.logger.warn('No Jira boards found or invalid response structure');
+        return null;
+      }
 
       const boardId = boards[0].id;
+      if (!boardId) {
+        this.logger.warn('Board ID not found in Jira response');
+        return null;
+      }
 
       // Get active sprint
       const sprintsRes = await this.client.get(
         `/rest/agile/1.0/board/${boardId}/sprint`,
         { params: { state: 'active' } },
       );
-      const activeSprints = sprintsRes.data.values;
-      if (activeSprints.length === 0) return null;
+      const activeSprints = sprintsRes.data?.values;
+      
+      if (!activeSprints || !Array.isArray(activeSprints) || activeSprints.length === 0) {
+        this.logger.warn('No active sprints found in Jira');
+        return null;
+      }
 
       return activeSprints[0];
-    } catch (error) {
-      this.logger.error('Failed to fetch active sprint from Jira', error?.message);
+    } catch (error: any) {
+      // Don't log as error if it's a configuration issue (401, 403, etc.)
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        this.logger.warn('Jira authentication failed. Check credentials.');
+      } else {
+        this.logger.error('Failed to fetch active sprint from Jira', error?.message);
+      }
       return null;
     }
   }

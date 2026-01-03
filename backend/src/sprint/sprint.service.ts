@@ -32,13 +32,18 @@ export class SprintService {
         const mlRes = await axios.post(
           `${this.ML_API_URL}/predict`,
           metrics,
-          { timeout: 5000 },
+          { timeout: 10000 }, // Increased timeout to 10 seconds
         );
 
         mlPrediction = `${mlRes.data.failure_probability}% chance of sprint failure`;
         mlExplanation = mlRes.data.explanation || [];
-      } catch (err) {
-        this.logger.error('ML service unavailable', err?.message);
+      } catch (err: any) {
+        // Log timeout as warning, other errors as error
+        if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+          this.logger.warn('ML service timeout. Service may be slow or unavailable.');
+        } else {
+          this.logger.error('ML service unavailable', err?.message);
+        }
       }
     }
 

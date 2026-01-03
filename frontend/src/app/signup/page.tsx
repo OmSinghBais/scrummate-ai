@@ -73,6 +73,13 @@ export default function SignupPage() {
         throw new Error(`Invalid API URL: ${registerUrl}. Please configure NEXT_PUBLIC_API_URL.`);
       }
       
+      console.log('Registration request:', {
+        url: registerUrl,
+        email,
+        hasName: !!name,
+        hasPassword: !!password,
+      });
+      
       const response = await axios.post(registerUrl, {
         name,
         email,
@@ -113,7 +120,14 @@ export default function SignupPage() {
                       `Server error (${err.response.status}): ${err.response.statusText || 'Unknown error'}`;
       } else if (err.request) {
         // Request made but no response (network error, CORS, etc.)
-        errorMessage = 'Cannot connect to backend server. Please check your connection or contact support.';
+        console.error('Network error details:', {
+          url: err.config?.url,
+          method: err.config?.method,
+          timeout: err.config?.timeout,
+          code: err.code,
+          message: err.message,
+        });
+        errorMessage = `Cannot connect to backend server at ${err.config?.url || 'unknown URL'}. Please check your connection or contact support.`;
       } else {
         // Error in request setup
         errorMessage = err.message || 'An unexpected error occurred.';

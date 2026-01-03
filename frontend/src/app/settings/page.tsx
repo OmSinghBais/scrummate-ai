@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, startTransition } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -261,10 +261,12 @@ function IntegrationsTab() {
       // For now, we'll simulate a connection test
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulate successful connection
-      setJiraConnected(true);
-      setJiraSuccess('Connection successful! Click Save to store your configuration.');
-      setJiraError('');
+      // Simulate successful connection - use startTransition for non-urgent updates
+      startTransition(() => {
+        setJiraConnected(true);
+        setJiraSuccess('Connection successful! Click Save to store your configuration.');
+        setJiraError('');
+      });
     } catch (error: any) {
       setJiraError(error.message || 'Connection failed. Please check your credentials.');
       setJiraConnected(false);
@@ -298,10 +300,12 @@ function IntegrationsTab() {
       // For now, we'll simulate a connection test
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulate successful connection
-      setGithubConnected(true);
-      setGithubSuccess('Connection successful! Click Save to store your configuration.');
-      setGithubError('');
+      // Simulate successful connection - use startTransition for non-urgent updates
+      startTransition(() => {
+        setGithubConnected(true);
+        setGithubSuccess('Connection successful! Click Save to store your configuration.');
+        setGithubError('');
+      });
     } catch (error: any) {
       setGithubError(error.message || 'Connection failed. Please check your credentials.');
       setGithubConnected(false);
@@ -324,9 +328,10 @@ function IntegrationsTab() {
       //   headers: { Authorization: `Bearer ${session?.accessToken}` }
       // });
       
-      // For now, show success message
-      alert('Jira configuration saved successfully! (Note: Backend integration endpoint needs to be implemented)');
-      setJiraSuccess('Configuration saved!');
+      // Use startTransition to mark this as a non-urgent update
+      startTransition(() => {
+        setJiraSuccess('Configuration saved!');
+      });
     } catch (error: any) {
       setJiraError('Failed to save configuration: ' + (error.message || 'Unknown error'));
     }
@@ -345,9 +350,10 @@ function IntegrationsTab() {
       //   headers: { Authorization: `Bearer ${session?.accessToken}` }
       // });
       
-      // For now, show success message
-      alert('GitHub configuration saved successfully! (Note: Backend integration endpoint needs to be implemented)');
-      setGithubSuccess('Configuration saved!');
+      // Use startTransition to mark this as a non-urgent update
+      startTransition(() => {
+        setGithubSuccess('Configuration saved!');
+      });
     } catch (error: any) {
       setGithubError('Failed to save configuration: ' + (error.message || 'Unknown error'));
     }

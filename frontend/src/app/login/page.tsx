@@ -27,6 +27,7 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage(''); // Clear success message on new login attempt
     setLoading(true);
 
     try {
@@ -37,12 +38,24 @@ function LoginForm() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
-      } else {
+        console.error('Login failed:', result.error);
+        // Provide more specific error messages
+        if (result.error.includes('fetch') || result.error.includes('network')) {
+          setError('Cannot connect to server. Please check your connection or try again later.');
+        } else if (result.error.includes('401') || result.error.includes('Unauthorized')) {
+          setError('Invalid email or password. Please check your credentials.');
+        } else {
+          setError('Login failed: ' + result.error);
+        }
+      } else if (result?.ok) {
+        // Successful login
         router.push('/dashboard');
+      } else {
+        setError('An unexpected error occurred. Please try again.');
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch (err: any) {
+      console.error('Login exception:', err);
+      setError('An error occurred: ' + (err.message || 'Please try again.'));
     } finally {
       setLoading(false);
     }

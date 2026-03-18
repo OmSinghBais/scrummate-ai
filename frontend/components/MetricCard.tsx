@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 const metricIcons: Record<string, string> = {
   'Spillover Rate': '📊',
   'PR Review Delay': '⏱️',
@@ -30,13 +32,20 @@ export default function MetricCard({ title, value, trend }: { title: string; val
   const icon = metricIcons[title] || '📈';
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl glass-card p-6 shadow-md transition-all duration-300 hover:-translate-y-2 hover:scale-105 card-3d">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -5, scale: 1.02 }}
+      transition={{ duration: 0.4 }}
+      className="group relative overflow-hidden rounded-2xl glass-card p-6 shadow-md card-3d"
+    >
       {/* Gradient background on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 to-amber-500/0 transition-all duration-300 group-hover:from-orange-500/10 group-hover:to-amber-500/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-500/0 to-cyan-500/0 transition-all duration-300 group-hover:from-teal-500/10 group-hover:to-cyan-500/10" />
 
       <div className="relative transform-3d">
         <div className="mb-4 flex items-center justify-between">
-          <div className="rounded-lg bg-gray-800 p-2">
+          <div className="rounded-lg bg-gray-800/80 backdrop-blur-sm p-2 border border-white/5">
             <span className="text-2xl">{icon}</span>
           </div>
           {trend !== undefined && (
@@ -51,14 +60,14 @@ export default function MetricCard({ title, value, trend }: { title: string; val
             </span>
           )}
         </div>
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400 font-outfit">
           {title}
         </h3>
-        <p className={`text-4xl font-extrabold ${valueColor} transition-colors`}>
+        <p className={`text-4xl font-extrabold ${valueColor} transition-colors font-outfit`}>
           {value}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
   

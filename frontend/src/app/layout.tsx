@@ -2,6 +2,10 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import Providers from '../components/Providers';
+import { Outfit, Inter } from 'next/font/google';
+
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'ScrumMate AI - Sprint Risk Analysis',
@@ -23,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="flex min-h-screen min-w-[340px] flex-col bg-black font-sans text-white antialiased overflow-x-hidden">
+      <body className={`flex min-h-screen min-w-[340px] flex-col bg-black font-sans text-white antialiased overflow-x-hidden ${outfit.variable} ${inter.variable}`}>
         <Providers>
           {children}
         </Providers>

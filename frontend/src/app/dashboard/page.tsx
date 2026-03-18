@@ -154,8 +154,8 @@ export default function Dashboard() {
 
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-serif text-white mb-2">Dashboard</h1>
-            <p className="text-neutral-400">Real-time sprint health monitoring and AI-powered risk prediction</p>
+            <h1 className="text-3xl font-outfit text-white mb-2 tracking-tight">Dashboard</h1>
+            <p className="text-neutral-400 font-sans">Real-time sprint health monitoring and AI-powered risk prediction</p>
           </div>
           <div className="flex items-center gap-4">
             <TeamSwitcher
@@ -225,19 +225,19 @@ export default function Dashboard() {
             <GlassCard className="mb-8 p-8">
               <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex-1">
-                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
+                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400 font-outfit">
                     Current Sprint Health Score
                   </h2>
                   <div className="mb-6 flex items-baseline gap-4">
                     <motion.div
-                      className={`text-7xl font-extrabold ${getHealthColor(data.healthScore)}`}
+                      className={`text-7xl font-outfit font-extrabold ${getHealthColor(data.healthScore)}`}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
                     >
                       {data.healthScore}
                     </motion.div>
-                    <div className="text-3xl font-medium text-gray-500">/ 100</div>
+                    <div className="text-3xl font-medium text-gray-500 font-outfit">/ 100</div>
                   </div>
                   <ProgressBar
                     value={data.healthScore}
@@ -250,18 +250,18 @@ export default function Dashboard() {
 
               {/* ML Prediction */}
               <motion.div
-                className="rounded-xl border-2 border-orange-500/30 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 p-5"
-                whileHover={{ scale: 1.02 }}
+                className="mt-6 rounded-xl border border-teal-500/30 bg-gradient-to-r from-teal-500/10 via-cyan-500/10 to-teal-500/10 p-5 backdrop-blur-md shadow-[0_0_15px_rgba(20,184,166,0.15)]"
+                whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(20,184,166,0.3)' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-gray-800 p-2 shadow-sm">
+                  <div className="rounded-lg bg-gray-800/60 p-2 shadow-sm border border-white/5">
                     <span className="text-2xl">🤖</span>
                   </div>
                   <div className="flex-1">
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400 font-outfit">
                       AI Prediction
                     </p>
-                    <p className="text-lg font-bold text-orange-400">{data.mlPrediction}</p>
+                    <p className="text-lg font-bold text-teal-400 font-outfit tracking-wide">{data.mlPrediction}</p>
                   </div>
                 </div>
               </motion.div>
@@ -310,10 +310,10 @@ export default function Dashboard() {
                     <Link
                       key={sprint.id}
                       href={`/sprints/${sprint.id}`}
-                      className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                      className="p-4 rounded-xl glass-card hover:bg-white/10 transition-colors group block card-3d"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-semibold text-white">{sprint.sprintName || `Sprint ${sprint.id}`}</span>
+                        <span className="font-semibold text-white font-outfit group-hover:text-teal-300 transition-colors">{sprint.sprintName || `Sprint ${sprint.id}`}</span>
                         <span className={`text-sm px-2 py-1 rounded-full ${
                           sprint.riskZone === 'GREEN' ? 'bg-green-500/20 text-green-400' :
                           sprint.riskZone === 'YELLOW' ? 'bg-yellow-500/20 text-yellow-400' :

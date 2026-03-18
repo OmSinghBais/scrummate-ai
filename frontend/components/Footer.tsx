@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-export default function Footer() {
+export default function Footer({ className = '' }: { className?: string }) {
   return (
-    <footer className="relative border-t border-white/5 bg-neutral-950 pt-16 pb-safe-or-8">
+    <footer className={`relative border-t border-white/5 bg-neutral-950 pt-16 pb-safe-or-8 ${className}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 pb-8 md:grid-cols-4">
           {/* Brand */}
